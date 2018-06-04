@@ -1,6 +1,7 @@
 package wallet.erc20.tazzmanian.erc20wallet;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -55,8 +56,6 @@ public class PasswordCreateFragment extends Fragment {
     };
 
     void checkFieldsForEmptyValues(){
-        b = (Button) view.findViewById(R.id.button3);
-
         String s1 = et1.getText().toString();
         String s2 = et2.getText().toString();
 
@@ -107,11 +106,20 @@ public class PasswordCreateFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_password_create, container, false);
         et1 = (EditText) view.findViewById(R.id.editText);
         et2 = (EditText) view.findViewById(R.id.editText2);
-
+        b = (Button) view.findViewById(R.id.button3);
 
         // set listeners
         et1.addTextChangedListener(mTextWatcher);
         et2.addTextChangedListener(mTextWatcher);
+
+        b.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), MainActivity.class);
+                startActivity(intent);
+            }
+        });
 
         // run once to disable if empty
         checkFieldsForEmptyValues();
