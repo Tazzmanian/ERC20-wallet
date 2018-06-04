@@ -18,7 +18,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@mipmap/LWpxKEv3_400x400TST" />
+        app:srcCompat="@mipmap/tst" />
 
     <Button
         android:id="@+id/button"
