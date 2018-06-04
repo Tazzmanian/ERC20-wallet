@@ -1,17 +1,24 @@
 package wallet.erc20.tazzmanian.erc20wallet;
 
 import android.content.Intent;
+import android.net.Uri;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
-public class WelcomeActivity extends AppCompatActivity {
+public class WelcomeActivity extends AppCompatActivity implements ImportSeedsFragment.OnFragmentInteractionListener, WelcomeFragment.OnFragmentInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        WelcomeFragment fragment = new WelcomeFragment();
+        fragmentTransaction.add(R.id.testId, fragment);
+//        fragmentTransaction.addToBackStack(null); // first fragment should not have it
+        fragmentTransaction.commit();
     }
 
     public void createWallet(View view) {
@@ -24,5 +31,15 @@ public class WelcomeActivity extends AppCompatActivity {
 
     public void restoreWallet(View view) {
         Toast.makeText(WelcomeActivity.this, "Restore Wallet", Toast.LENGTH_LONG).show();
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        ImportSeedsFragment fragment = new ImportSeedsFragment();
+        fragmentTransaction.replace(R.id.testId, fragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
     }
 }
