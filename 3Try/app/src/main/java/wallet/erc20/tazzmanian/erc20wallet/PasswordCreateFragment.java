@@ -4,9 +4,14 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
 
 /**
@@ -28,6 +33,41 @@ public class PasswordCreateFragment extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+
+    private EditText et1,et2;
+    private Button b;
+    private View view;
+    //  create a textWatcher member
+    private TextWatcher mTextWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+            // check Fields For Empty Values
+            checkFieldsForEmptyValues();
+        }
+    };
+
+    void checkFieldsForEmptyValues(){
+        b = (Button) view.findViewById(R.id.button3);
+
+        String s1 = et1.getText().toString();
+        String s2 = et2.getText().toString();
+
+        if(s1.equals("")|| s2.equals("") || !s1.equals(s2)){
+            Toast.makeText(view.getContext(), "false", Toast.LENGTH_SHORT).show();
+            b.setEnabled(false);
+        } else {
+            Toast.makeText(view.getContext(), "true", Toast.LENGTH_SHORT).show();
+            b.setEnabled(true);
+        }
+    }
 
     public PasswordCreateFragment() {
         // Required empty public constructor
@@ -64,7 +104,18 @@ public class PasswordCreateFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_password_create, container, false);
+        view = inflater.inflate(R.layout.fragment_password_create, container, false);
+        et1 = (EditText) view.findViewById(R.id.editText);
+        et2 = (EditText) view.findViewById(R.id.editText2);
+
+
+        // set listeners
+        et1.addTextChangedListener(mTextWatcher);
+        et2.addTextChangedListener(mTextWatcher);
+
+        // run once to disable if empty
+        checkFieldsForEmptyValues();
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
