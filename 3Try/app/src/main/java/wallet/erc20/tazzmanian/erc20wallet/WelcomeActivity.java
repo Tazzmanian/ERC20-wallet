@@ -8,7 +8,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
-public class WelcomeActivity extends AppCompatActivity implements ImportSeedsFragment.OnFragmentInteractionListener, WelcomeFragment.OnFragmentInteractionListener {
+public class WelcomeActivity extends AppCompatActivity
+        implements ImportSeedsFragment.OnFragmentInteractionListener, WelcomeFragment.OnFragmentInteractionListener,
+                    PasswordCreateFragment.OnFragmentInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,9 +25,15 @@ public class WelcomeActivity extends AppCompatActivity implements ImportSeedsFra
 
     public void createWallet(View view) {
         Toast.makeText(WelcomeActivity.this, "Create Wallet", Toast.LENGTH_LONG).show();
+
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        PasswordCreateFragment fragment = new PasswordCreateFragment();
+        fragmentTransaction.replace(R.id.testId, fragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
         if(true) {
             // when account create creates open main activity
-            startActivity(new Intent(this, MainActivity.class));
+            //startActivity(new Intent(this, MainActivity.class));
         }
     }
 
