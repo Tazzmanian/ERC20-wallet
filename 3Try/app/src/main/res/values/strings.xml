@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">ERC20 Wallet</string>
     <string name="title_activity_main">MainActivity</string>
-    <string name="title_history">History</string>
+    <string name="title_history">Transactions</string>
     <string name="title_send">Send</string>
     <string name="title_address">My Address</string>
 
