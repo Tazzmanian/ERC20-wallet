@@ -16,6 +16,7 @@ public class WelcomeActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
+//        setContentView(R.layout.activity_drawer);
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         WelcomeFragment fragment = new WelcomeFragment();
         fragmentTransaction.add(R.id.testId, fragment);
