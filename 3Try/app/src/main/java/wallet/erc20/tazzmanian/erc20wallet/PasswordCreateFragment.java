@@ -116,6 +116,9 @@ public class PasswordCreateFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
+                Utils util = Utils.getInstance();
+                util.createWallet(et1.getText().toString(), getActivity().getExternalFilesDir("/keys/"));
+
                 Intent intent = new Intent(getActivity(), MainActivity.class);
                 startActivity(intent);
             }
