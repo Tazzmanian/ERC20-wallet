@@ -16,11 +16,28 @@ public class ContractManager {
 
     static final String DropTable = "DROP table IF EXISTS " + TableName + ";";
 
-    public void createTable(SQLiteDatabase db) {
+    private static SQLiteDatabase db;
+
+    private static ContractManager INSTANCE;
+
+    private ContractManager() {}
+
+    private ContractManager(SQLiteDatabase db) {
+        this.db = db;
+    }
+
+    public static ContractManager getInstance(SQLiteDatabase db) {
+        if(INSTANCE == null) {
+            INSTANCE = new ContractManager(db);
+        }
+        return INSTANCE;
+    }
+
+    public void createTable() {
         db.execSQL(CreateTable);
     }
 
-    public void updateTable(SQLiteDatabase db) {
+    public void updateTable() {
         db.execSQL(DropTable);
     }
 }

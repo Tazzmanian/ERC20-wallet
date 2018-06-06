@@ -17,12 +17,17 @@ public class WelcomeActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         DBManager dbm = DBManager.getInstance(this);
         setContentView(R.layout.activity_welcome);
-//        setContentView(R.layout.activity_drawer);
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        WelcomeFragment fragment = new WelcomeFragment();
-        fragmentTransaction.add(R.id.testId, fragment);
-//        fragmentTransaction.addToBackStack(null); // first fragment should not have it
-        fragmentTransaction.commit();
+
+        if(DBManager.am.count() > 0) {
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+        } else {
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            WelcomeFragment fragment = new WelcomeFragment();
+            fragmentTransaction.add(R.id.testId, fragment);
+    //        fragmentTransaction.addToBackStack(null); // first fragment should not have it
+            fragmentTransaction.commit();
+        }
     }
 
     public void createWallet(View view) {

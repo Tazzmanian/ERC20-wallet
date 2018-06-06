@@ -22,11 +22,28 @@ public class TransactionsManager {
 
     static final String DropTable = "DROP table IF EXISTS " + TableName + ";";
 
-    public void createTable(SQLiteDatabase db) {
+    private static SQLiteDatabase db;
+
+    private static TransactionsManager INSTANCE;
+
+    private TransactionsManager() {}
+
+    private TransactionsManager(SQLiteDatabase db) {
+        this.db = db;
+    }
+
+    public static TransactionsManager getInstance(SQLiteDatabase db) {
+        if(INSTANCE == null) {
+            INSTANCE = new TransactionsManager(db);
+        }
+        return INSTANCE;
+    }
+
+    public void createTable() {
         db.execSQL(CreateTable);
     }
 
-    public void updateTable(SQLiteDatabase db) {
+    public void updateTable() {
         db.execSQL(DropTable);
     }
 }

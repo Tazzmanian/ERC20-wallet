@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DBManager {
     static final String DBName = "ERC20Wallet";
-    static final int DBVersion = 6;
+    static final int DBVersion = 7;
     static AccountManager am;
     static TransactionsManager tm;
     static ContractManager cm;
@@ -16,11 +16,11 @@ public class DBManager {
 
     private DBManager() {}
     private DBManager(Context context) {
-        am = new AccountManager();
-        tm = new TransactionsManager();
-        cm = new ContractManager();
         DatabaseHelperUser db = new DatabaseHelperUser(context);
         sqlDB = db.getWritableDatabase();
+        am = AccountManager.getInstance(sqlDB);
+        tm = TransactionsManager.getInstance(sqlDB);
+        cm = ContractManager.getInstance(sqlDB);
     }
 
     public static DBManager getInstance(Context context) {
@@ -40,16 +40,22 @@ public class DBManager {
 
         @Override
         public void onCreate(SQLiteDatabase db) {
-            am.createTable(db);
-            tm.createTable(db);
-            cm.createTable(db);
+            am = AccountManager.getInstance(db);
+            tm = TransactionsManager.getInstance(db);
+            cm = ContractManager.getInstance(db);
+            am.createTable();
+            tm.createTable();
+            cm.createTable();
         }
 
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-            am.updateTable(db);
-            tm.updateTable(db);
-            cm.updateTable(db);
+            am = AccountManager.getInstance(db);
+            tm = TransactionsManager.getInstance(db);
+            cm = ContractManager.getInstance(db);
+            am.updateTable();
+            tm.updateTable();
+            cm.updateTable();
             onCreate(db);
         }
     }
