@@ -15,6 +15,7 @@ public class WelcomeActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        DBManager dbm = DBManager.getInstance(this);
         setContentView(R.layout.activity_welcome);
 //        setContentView(R.layout.activity_drawer);
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
