@@ -107,6 +107,7 @@ public class PasswordCreateFragment extends Fragment {
         et1 = (EditText) view.findViewById(R.id.editText);
         et2 = (EditText) view.findViewById(R.id.editText2);
         b = (Button) view.findViewById(R.id.button3);
+        DBManager.getInstance(getContext());
 
         // set listeners
         et1.addTextChangedListener(mTextWatcher);
@@ -118,7 +119,8 @@ public class PasswordCreateFragment extends Fragment {
             public void onClick(View v) {
                 Utils util = Utils.getInstance();
                 util.createWallet(et1.getText().toString(), getActivity().getExternalFilesDir("/keys/"));
-
+                util.loadWallet(et1.getText().toString(), Utils.MNEMONICS);
+                DBManager.am.insert(Utils.MNEMONICS, Utils.getAddress());
                 Intent intent = new Intent(getActivity(), MainActivity.class);
                 startActivity(intent);
             }

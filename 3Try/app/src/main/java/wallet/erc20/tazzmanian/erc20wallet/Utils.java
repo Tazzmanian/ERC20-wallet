@@ -15,7 +15,8 @@ public final class Utils {
 
     private static Utils INSTANCE;
 //    private static Bip39Wallet WALLET;
-    private static String MNEMONICS;
+    public static String MNEMONICS;
+    private static Credentials credentials;
 
     private Utils() {}
 
@@ -29,6 +30,7 @@ public final class Utils {
     public void destroyInstance() {
         INSTANCE = null;
         MNEMONICS = null;
+        credentials = null;
     }
 
     public void createWallet(String password, File dir) {
@@ -45,10 +47,18 @@ public final class Utils {
         }
     }
 
-    public Credentials loadWallet(String password, String mnemonics) {
+    public void loadWallet(String password, String mnemonics) {
         if(mnemonics == null) {
             mnemonics = MNEMONICS;
         }
-        return WalletUtils.loadBip39Credentials(password, mnemonics);
+        credentials = WalletUtils.loadBip39Credentials(password, mnemonics);
+    }
+
+    public static Credentials getCredentials() {
+        return credentials;
+    }
+
+    public static String getAddress() {
+        return credentials.getAddress();
     }
 }
