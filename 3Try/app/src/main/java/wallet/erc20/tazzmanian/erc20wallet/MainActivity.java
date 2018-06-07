@@ -21,7 +21,8 @@ import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
         TransactionsFragment.OnFragmentInteractionListener, SendFragment.OnFragmentInteractionListener,
-        UserInfoFragment.OnFragmentInteractionListener {
+        UserInfoFragment.OnFragmentInteractionListener, AccountsFragment.OnFragmentInteractionListener,
+        ContractFragment.OnFragmentInteractionListener, ServerFragment.OnFragmentInteractionListener {
 
     private TextView mTextMessage;
 
@@ -118,19 +119,33 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
-        int id = item.getItemId();
 
-        if (id == R.id.nav_accounts) {
-            // Handle the camera action
-        } else if (id == R.id.nav_contracts) {
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        Fragment fragment = null;
+        boolean flag = false;
 
-        } else if (id == R.id.nav_server) {
-
+        switch (item.getItemId()) {
+            case R.id.nav_accounts:
+                fragment = new AccountsFragment();
+                flag = true;
+                break;
+            case R.id.nav_contracts:
+                fragment = new ContractFragment();
+                flag = true;
+                break;
+            case R.id.nav_server:
+                fragment = new ServerFragment();
+                flag = true;
+                break;
         }
+
+        fragmentTransaction.replace(R.id.main_frame_layout, fragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
-        return true;
+        return flag;
     }
 
     @Override
