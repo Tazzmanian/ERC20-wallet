@@ -31,31 +31,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            Fragment fragment = null;
-
             boolean flag = false;
             switch (item.getItemId()) {
                 case R.id.navigation_history:
                     mTextMessage.setText(R.string.title_history);
-                    fragment = new TransactionsFragment();
+                    loadFragment(new TransactionsFragment());
                     flag = true;
                     break;
                 case R.id.navigation_send:
                     mTextMessage.setText(R.string.title_send);
-                    fragment = new SendFragment();
+                    loadFragment(new SendFragment());
                     flag = true;
                     break;
                 case R.id.navigation_address:
                     mTextMessage.setText(R.string.title_address);
-                    fragment = new UserInfoFragment();
+                    loadFragment(new UserInfoFragment());
                     flag = true;
                     break;
             }
-
-            fragmentTransaction.replace(R.id.main_frame_layout, fragment);
-            fragmentTransaction.addToBackStack(null);
-            fragmentTransaction.commit();
 
             return flag;
         }
@@ -119,33 +112,32 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
-
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        Fragment fragment = null;
         boolean flag = false;
-
         switch (item.getItemId()) {
             case R.id.nav_accounts:
-                fragment = new AccountsFragment();
+                loadFragment(new AccountsFragment());
                 flag = true;
                 break;
             case R.id.nav_contracts:
-                fragment = new ContractFragment();
+                loadFragment(new ContractFragment());
                 flag = true;
                 break;
             case R.id.nav_server:
-                fragment = new ServerFragment();
+                loadFragment(new ServerFragment());
                 flag = true;
                 break;
         }
 
-        fragmentTransaction.replace(R.id.main_frame_layout, fragment);
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return flag;
+    }
+
+    private void loadFragment(Fragment fragment) {
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.main_frame_layout, fragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
     }
 
     @Override
