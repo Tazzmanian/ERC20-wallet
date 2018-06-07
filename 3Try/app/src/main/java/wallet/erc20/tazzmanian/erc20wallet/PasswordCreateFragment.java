@@ -122,7 +122,9 @@ public class PasswordCreateFragment extends Fragment {
                 util.loadWallet(et1.getText().toString(), Utils.MNEMONICS);
                 DBManager.am.insert(Utils.MNEMONICS, Utils.getAddress());
                 Intent intent = new Intent(getActivity(), MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
+                getActivity().finish();
             }
         });
 

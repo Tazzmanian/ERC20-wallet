@@ -20,7 +20,9 @@ public class WelcomeActivity extends AppCompatActivity
 
         if(DBManager.am.count() > 0) {
             Intent intent = new Intent(this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
+            finish();
         } else {
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             WelcomeFragment fragment = new WelcomeFragment();
