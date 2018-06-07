@@ -30,19 +30,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private TextView mTextMessage;
 
     private int lastMenuId = 0;
-    private int lastFrameId = 0;
+    private int lastSelected = 0;
 
     private class Frame {
-        int frameId;
         int menuId;
-        int menuItemId;
-        Fragment fragment;
+        int selectedId;
 
-        Frame(int f, int m, int i, Fragment fr) {
-            frameId = f;
+        Frame(int m, int i) {
             menuId = m;
-            menuItemId = i;
-            fragment = fr;
+            selectedId = i;
         }
     }
 
@@ -84,7 +80,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//        loadBottomNavigation(R.id.navigation)
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.add(R.id.main_frame_layout, new TransactionsFragment());
         fragmentTransaction.commit();
@@ -92,6 +87,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mTextMessage = (TextView) findViewById(R.id.message);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        loadBottomNavigation(R.id.navigation_history, R.menu.navigation);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -115,6 +111,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //        else {
 //            super.onBackPressed();
 //        }
+
+        loadBottomNavOnBackPressed();
 
         FragmentManager fm = getSupportFragmentManager();
         if(fm.getBackStackEntryCount() > 0){
@@ -195,17 +193,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 .addToBackStack(name).commit();
     }
 
-    private void loadBottomNavigation(int frameId, int menuId) {
+    private void loadBottomNavigation(int selected, int menuId) {
+
+        if(lastMenuId == menuId && lastSelected == selected) {
+            return;
+        }
+
         if(lastMenuId == 0) {
             lastMenuId = menuId;
-            return;
         }
 
-        if(lastMenuId == menuId) {
-            return;
-        }
-
-        switch (frameId) {
+        switch (selected) {
             case R.id.navigation_history:
             case R.id.navigation_send:
             case R.id.navigation_address:
@@ -221,14 +219,47 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 loadMenu(menuId);
                 break;
         }
-        lastMenuId = frameId;
+        lastMenuId = menuId;
+        lastSelected = selected;
+        frameStack.push(new Frame(lastMenuId, selected));
     }
 
     private void loadMenu(int menuId) {
+        if(lastMenuId == menuId || lastMenuId == 0) {
+            return;
+        }
         BottomNavigationView navigationView = (BottomNavigationView) findViewById(R.id.navigation);
         navigationView.getMenu().clear();
         navigationView.inflateMenu(menuId);
     }
+
+
+    private void loadBottomNavOnBackPressed() {
+
+        if(frameStack.size() == 0) {
+            return;
+        }
+
+        if(frameStack.size() < 2) {
+            return;
+        } else {
+            BottomNavigationView navigationView = (BottomNavigationView) findViewById(R.id.navigation);
+            Frame f = frameStack.get(frameStack.size() - 2);
+            frameStack.pop();
+            if(lastMenuId != f.menuId) {
+                navigationView.getMenu().clear();
+                navigationView.inflateMenu(f.menuId);
+                lastMenuId = f.menuId;
+                lastSelected = f.selectedId;
+            }
+            navigationView.setOnNavigationItemSelectedListener(null);
+            navigationView.setSelectedItemId(f.selectedId);
+            navigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        }
+
+
+    }
+
 
     @Override
     public void onFragmentInteraction(Uri uri) {
