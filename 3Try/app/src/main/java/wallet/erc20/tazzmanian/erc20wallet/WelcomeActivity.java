@@ -20,7 +20,9 @@ public class WelcomeActivity extends AppCompatActivity
 
         if(DBManager.am.count() > 0) {
             Intent intent = new Intent(this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
+            finish();
         } else {
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             WelcomeFragment fragment = new WelcomeFragment();
@@ -31,21 +33,14 @@ public class WelcomeActivity extends AppCompatActivity
     }
 
     public void createWallet(View view) {
-        Toast.makeText(WelcomeActivity.this, "Create Wallet", Toast.LENGTH_LONG).show();
-
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         PasswordCreateFragment fragment = new PasswordCreateFragment();
         fragmentTransaction.replace(R.id.testId, fragment);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
-        if(true) {
-            // when account create creates open main activity
-            //startActivity(new Intent(this, MainActivity.class));
-        }
     }
 
     public void restoreWallet(View view) {
-        Toast.makeText(WelcomeActivity.this, "Restore Wallet", Toast.LENGTH_LONG).show();
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         ImportSeedsFragment fragment = new ImportSeedsFragment();
         fragmentTransaction.replace(R.id.testId, fragment);
