@@ -158,12 +158,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case R.id.nav_contracts:
                 loadFragment(new ContractFragment());
-//                loadBottomNavigation(R.id.nav_contracts, null);
+                loadBottomNavigation(R.id.nav_contracts, R.menu.contracts_manage_menu);
                 flag = true;
                 break;
             case R.id.nav_server:
                 loadFragment(new ServerFragment());
-//                loadBottomNavigation(R.id.nav_server);
+                loadBottomNavigation(R.id.nav_server, R.menu.server_manage_menu);
                 flag = true;
                 break;
         }

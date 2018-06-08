@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/add_server"
+        android:icon="@drawable/ic_add_black_24dp"
+        android:title="@string/title_add" />
+
+    <item
+        android:id="@+id/remove_server"
+        android:icon="@drawable/ic_remove_black_24dp"
+        android:title="@string/title_remove" />
+
+    <item
+        android:id="@+id/select_server"
+        android:icon="@drawable/ic_check_black_24dp"
+        android:title="@string/title_select" />
+
+</menu>
