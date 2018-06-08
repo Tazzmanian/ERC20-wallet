@@ -1,5 +1,8 @@
 package wallet.erc20.tazzmanian.erc20wallet;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -19,6 +22,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.Stack;
 
@@ -35,10 +39,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private class Frame {
         int menuId;
         int selectedId;
+        boolean hidden;
 
-        Frame(int m, int i) {
+        Frame(int m, int i, boolean h) {
             menuId = m;
             selectedId = i;
+            hidden = h;
         }
     }
 
@@ -203,37 +209,43 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             lastMenuId = menuId;
         }
 
+        boolean hidden = false;
+
         switch (selected) {
             case R.id.navigation_history:
             case R.id.navigation_send:
             case R.id.navigation_address:
-                loadMenu(menuId);
+                loadMenu(menuId, hidden);
                 break;
             case R.id.nav_accounts:
-                loadMenu(menuId);
-                break;
             case R.id.nav_contracts:
-                loadMenu(menuId);
-                break;
             case R.id.nav_server:
-                loadMenu(menuId);
+                hidden = true;
+                loadMenu(menuId, hidden);
                 break;
         }
         lastMenuId = menuId;
         lastSelected = selected;
-        frameStack.push(new Frame(lastMenuId, selected));
+        frameStack.push(new Frame(lastMenuId, selected, hidden));
     }
 
-    private void loadMenu(int menuId) {
+    private void loadMenu(int menuId, boolean hide) {
         if(lastMenuId == menuId || lastMenuId == 0) {
             return;
         }
         BottomNavigationView navigationView = (BottomNavigationView) findViewById(R.id.navigation);
         navigationView.getMenu().clear();
         navigationView.inflateMenu(menuId);
+        if(hide) {
+            navigationView.setVisibility(View.GONE);
+        } else {
+            navigationView.setVisibility(View.VISIBLE);
+        }
+
     }
 
 
+    // will need more correction the other menus are buttons not navigation
     private void loadBottomNavOnBackPressed() {
 
         if(frameStack.size() == 0) {
@@ -254,6 +266,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
             navigationView.setOnNavigationItemSelectedListener(null);
             navigationView.setSelectedItemId(f.selectedId);
+            if(f.hidden) {
+                navigationView.setVisibility(View.GONE);
+            } else {
+                navigationView.setVisibility(View.VISIBLE);
+            }
             navigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         }
 
@@ -264,6 +281,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+    }
+
+    public void copyAddress(View view) {
+        TextView hash = (TextView) findViewById(R.id.account_hash_id);
+        ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipData clip = ClipData.newPlainText("address", hash.getText().toString());
+        clipboard.setPrimaryClip(clip);
     }
 
 }

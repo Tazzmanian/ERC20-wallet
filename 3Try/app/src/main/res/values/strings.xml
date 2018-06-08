@@ -17,4 +17,5 @@
     <string name="title_add">Add</string>
     <string name="title_remove">Remove</string>
     <string name="title_select">Select</string>
+    <string name="title_public_address">Public Address</string>
 </resources>
