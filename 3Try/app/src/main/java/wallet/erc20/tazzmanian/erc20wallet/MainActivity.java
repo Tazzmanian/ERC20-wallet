@@ -18,18 +18,26 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.w3c.dom.Text;
+
+import java.util.ArrayList;
 import java.util.Stack;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
         TransactionsFragment.OnFragmentInteractionListener, SendFragment.OnFragmentInteractionListener,
         UserInfoFragment.OnFragmentInteractionListener, AccountsFragment.OnFragmentInteractionListener,
-        ContractFragment.OnFragmentInteractionListener, ServerFragment.OnFragmentInteractionListener {
+        ContractFragment.OnFragmentInteractionListener, ServerFragment.OnFragmentInteractionListener,
+        WelcomeFragment.OnFragmentInteractionListener, PasswordCreateFragment.OnFragmentInteractionListener,
+        ImportSeedsFragment.OnFragmentInteractionListener {
 
     private TextView mTextMessage;
 
@@ -58,19 +66,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             boolean flag = false;
             switch (item.getItemId()) {
                 case R.id.navigation_history:
-                    mTextMessage.setText(R.string.title_history);
                     loadFragment(new TransactionsFragment());
                     loadBottomNavigation(R.id.navigation_history, R.menu.navigation);
                     flag = true;
                     break;
                 case R.id.navigation_send:
-                    mTextMessage.setText(R.string.title_send);
                     loadFragment(new SendFragment());
                     loadBottomNavigation(R.id.navigation_send, R.menu.navigation);
                     flag = true;
                     break;
                 case R.id.navigation_address:
-                    mTextMessage.setText(R.string.title_address);
                     loadFragment(new UserInfoFragment());
                     loadBottomNavigation(R.id.navigation_address, R.menu.navigation);
                     flag = true;
@@ -290,4 +295,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         clipboard.setPrimaryClip(clip);
     }
 
+//    public void createWallet(View view) {
+//        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+//        PasswordCreateFragment fragment = new PasswordCreateFragment();
+//        fragmentTransaction.replace(R.id.main_frame_layout, fragment);
+//        fragmentTransaction.addToBackStack(null);
+//        fragmentTransaction.commit();
+//    }
+//
+//    public void restoreWallet(View view) {
+//        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+//        ImportSeedsFragment fragment = new ImportSeedsFragment();
+//        fragmentTransaction.replace(R.id.main_frame_layout, fragment);
+//        fragmentTransaction.addToBackStack(null);
+//        fragmentTransaction.commit();
+//    }
+
 }
+

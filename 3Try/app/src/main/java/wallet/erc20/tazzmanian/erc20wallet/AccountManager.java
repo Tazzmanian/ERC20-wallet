@@ -6,16 +6,19 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.util.ArrayList;
+
 public class AccountManager {
 
     static final String TableName = "Accounts";
     static final String ColumnMnemonics = "Mnemonics";
     static final String ColumnActive = "Active";
     static final String ColumnPublicHash = "Hash";
+    static final String ColumnID = "ID";
     static SQLiteDatabase db;
 
     static final String CreateTable = "Create table IF NOT EXISTS " + TableName +
-            "(ID integer PRIMARY KEY AUTOINCREMENT, " + ColumnActive +
+            "(" + ColumnID +" integer PRIMARY KEY AUTOINCREMENT, " + ColumnActive +
             " text, " + ColumnMnemonics + " text, " + ColumnPublicHash + " text);";
 
     static final String DropTable = "DROP table IF EXISTS " + TableName + ";";
@@ -52,6 +55,37 @@ public class AccountManager {
         Cursor cursor = db.rawQuery("Select * from " + TableName + ";", null);
         System.out.println("TTT: " + cursor.getCount());
         return cursor.getCount();
+    }
+
+    public ArrayList<AccountItems> getAll() {
+        Cursor cursor = db.rawQuery("Select * from " + TableName + ";", null);
+
+        ArrayList<AccountItems> list = new ArrayList<>();
+        if (cursor != null && cursor.moveToFirst()) {
+            //get columns
+            int id = cursor.getColumnIndex
+                    (ColumnID);
+            int active = cursor.getColumnIndex
+                    (ColumnActive);
+            int mnemonics = cursor.getColumnIndex
+                    (ColumnMnemonics);
+            int hash = cursor.getColumnIndex
+                    (ColumnPublicHash);
+
+            //add row to list
+            do {
+                long thisId = cursor.getLong(id);
+                boolean thisActive = cursor.getLong(active) == 0 ? false : true;
+                String thisMnemonics = cursor.getString(mnemonics);
+                String thisHash = cursor.getString(hash);
+
+                list.add(new AccountItems(thisMnemonics, thisId, thisHash, thisActive));
+            }
+            while (cursor.moveToNext());
+            cursor.close();
+        }
+
+        return list;
     }
 
     public String getActiveMnemonicsAccount() {
