@@ -35,6 +35,10 @@ public class AccountManager {
         return INSTANCE;
     }
 
+    public static AccountManager getInstance() {
+        return INSTANCE;
+    }
+
 
     public void createTable() {
         db.execSQL(CreateTable);
@@ -50,7 +54,7 @@ public class AccountManager {
         return cursor.getCount();
     }
 
-    public String getActiveAccount() {
+    public String getActiveMnemonicsAccount() {
         if(count() == 0) {
             return "";
         }
@@ -61,6 +65,26 @@ public class AccountManager {
         if(cursor.getCount() == 0) {
             cursor = db.rawQuery("Select " + ColumnMnemonics + " from " + TableName + ";", null);
             cursor.moveToFirst();
+            // update default active 1
+            return cursor.getString(0);
+        }
+
+        cursor.moveToFirst();
+        return cursor.getString(0);
+    }
+
+    public String getActiveHashAccount() {
+        if(count() == 0) {
+            return "";
+        }
+
+        Cursor cursor = db.rawQuery("Select " + ColumnPublicHash + " from " + TableName + " where " +
+                ColumnActive + " == 1;", null);
+
+        if(cursor.getCount() == 0) {
+            cursor = db.rawQuery("Select " + ColumnPublicHash + " from " + TableName + ";", null);
+            cursor.moveToFirst();
+            // update default active 1
             return cursor.getString(0);
         }
 

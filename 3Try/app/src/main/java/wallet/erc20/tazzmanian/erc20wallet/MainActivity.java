@@ -234,6 +234,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
+    // will need more correction the other menus are buttons not navigation
     private void loadBottomNavOnBackPressed() {
 
         if(frameStack.size() == 0) {
