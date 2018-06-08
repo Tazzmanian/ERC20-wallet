@@ -1,5 +1,8 @@
 package wallet.erc20.tazzmanian.erc20wallet;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -19,6 +22,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.Stack;
 
@@ -265,6 +269,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+    }
+
+    public void copyAddress(View view) {
+        TextView hash = (TextView) findViewById(R.id.account_hash_id);
+        ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipData clip = ClipData.newPlainText("address", hash.getText().toString());
+        clipboard.setPrimaryClip(clip);
     }
 
 }

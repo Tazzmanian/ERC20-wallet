@@ -81,7 +81,7 @@ public class UserInfoFragment extends Fragment {
         ImageView imv = view.findViewById(R.id.public_address_image);
 
         try {
-            Bitmap bitmap = encodeAsBitmap(hashStr, 300);
+            Bitmap bitmap = encodeAsBitmap(hashStr, 200);
             imv.setImageBitmap(bitmap);
         } catch (WriterException e) {
             e.printStackTrace();
