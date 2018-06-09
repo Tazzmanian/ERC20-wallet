@@ -1,47 +1,41 @@
 package wallet.erc20.tazzmanian.erc20wallet;
 
 import android.content.Context;
-import android.graphics.Bitmap;
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.ImageView;
-import android.widget.TextView;
-
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.MultiFormatWriter;
-import com.google.zxing.WriterException;
-import com.google.zxing.common.BitMatrix;
-
-import java.util.ArrayList;
+import android.widget.Button;
+import android.widget.Toast;
 
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link UserInfoFragment.OnFragmentInteractionListener} interface
+ * {@link AccountPopFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link UserInfoFragment#newInstance} factory method to
+ * Use the {@link AccountPopFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class UserInfoFragment extends Fragment {
+public class AccountPopFragment extends DialogFragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
     private OnFragmentInteractionListener mListener;
+    private DialogInterface.OnDismissListener onDismissListener;
 
-    public UserInfoFragment() {
+    public void setOnDismissListener(DialogInterface.OnDismissListener onDismissListener) {
+        this.onDismissListener = onDismissListener;
+    }
+
+    public AccountPopFragment() {
         // Required empty public constructor
     }
 
@@ -51,11 +45,11 @@ public class UserInfoFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment UserInfoFragment.
+     * @return A new instance of fragment AccountPopFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static UserInfoFragment newInstance(String param1, String param2) {
-        UserInfoFragment fragment = new UserInfoFragment();
+    public static AccountPopFragment newInstance(String param1, String param2) {
+        AccountPopFragment fragment = new AccountPopFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -66,54 +60,35 @@ public class UserInfoFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_user_info, container, false);
-        TextView hash = (TextView) view.findViewById(R.id.account_hash_id);
-        String hashStr = DBManager.am.getActiveHashAccount();
-        hash.setText(hashStr);
-        ImageView imv = view.findViewById(R.id.public_address_image);
+        View view = inflater.inflate(R.layout.fragment_account_pop, container, false);
 
-        try {
-            Bitmap bitmap = encodeAsBitmap(hashStr, 200);
-            imv.setImageBitmap(bitmap);
-        } catch (WriterException e) {
-            e.printStackTrace();
-        }
+        Button defaultBtn = view.findViewById(R.id.default_btn);
+        final String hash = getArguments().getString("hash");
+
+        defaultBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+                DBManager.am.updateDefault(hash);
+            }
+        });
+
+        Button deleteBtn = view.findViewById(R.id.delete_btn);
+        deleteBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+                DBManager.am.deleteAccount(hash);
+            }
+        });
 
         return view;
-    }
-
-    private Bitmap encodeAsBitmap(String str, int width) throws WriterException {
-        BitMatrix result;
-        try {
-            result = new MultiFormatWriter().encode(str,
-                    BarcodeFormat.DATA_MATRIX.QR_CODE, width, width, null);
-        } catch (IllegalArgumentException iae) {
-            // Unsupported format
-            return null;
-        }
-        int w = result.getWidth();
-        int h = result.getHeight();
-        int[] pixels = new int[w * h];
-        for (int y = 0; y < h; y++) {
-            int offset = y * w;
-            for (int x = 0; x < w; x++) {
-                pixels[offset + x] = result.get(x, y) ? ContextCompat.getColor(getContext(), R.color.black) : ContextCompat.getColor(getContext(), R.color.white);
-            }
-        }
-        Bitmap bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
-        bitmap.setPixels(pixels, 0, width, 0, 0, w, h);
-        return bitmap;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -140,6 +115,20 @@ public class UserInfoFragment extends Fragment {
         mListener = null;
     }
 
+    @Override
+    public void onCancel(DialogInterface dialog) {
+        super.onCancel(dialog);
+    }
+
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        super.onDismiss(dialog);
+//        Toast.makeText(getActivity(), "test1", Toast.LENGTH_LONG).show();
+        if (onDismissListener != null) {
+            onDismissListener.onDismiss(dialog);
+        }
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -154,5 +143,4 @@ public class UserInfoFragment extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
-
 }

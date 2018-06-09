@@ -18,7 +18,7 @@ public class WelcomeActivity extends AppCompatActivity
         DBManager dbm = DBManager.getInstance(this);
         setContentView(R.layout.activity_welcome);
 
-        if(DBManager.am.count() > 0) {
+        if(DBManager.am.count() > 0 && getIntent().getExtras() == null) {
             Intent intent = new Intent(this, MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
