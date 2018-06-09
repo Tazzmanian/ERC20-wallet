@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DBManager {
     static final String DBName = "ERC20Wallet";
-    static final int DBVersion = 7;
+    static final int DBVersion = 8;
     static AccountManager am;
     static TransactionsManager tm;
     static ContractManager cm;

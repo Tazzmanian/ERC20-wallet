@@ -37,7 +37,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         UserInfoFragment.OnFragmentInteractionListener, AccountsFragment.OnFragmentInteractionListener,
         ContractFragment.OnFragmentInteractionListener, ServerFragment.OnFragmentInteractionListener,
         WelcomeFragment.OnFragmentInteractionListener, PasswordCreateFragment.OnFragmentInteractionListener,
-        ImportSeedsFragment.OnFragmentInteractionListener, AccountPopFragment.OnFragmentInteractionListener {
+        ImportSeedsFragment.OnFragmentInteractionListener, AccountPopFragment.OnFragmentInteractionListener,
+        AddServerFragment.OnFragmentInteractionListener {
 
     private TextView mTextMessage;
 
