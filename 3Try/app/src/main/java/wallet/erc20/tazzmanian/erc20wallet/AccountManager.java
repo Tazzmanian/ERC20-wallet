@@ -118,7 +118,6 @@ public class AccountManager {
         if(cursor.getCount() == 0) {
             cursor = db.rawQuery("Select " + ColumnPublicHash + " from " + TableName + ";", null);
             cursor.moveToFirst();
-            // update default active 1
             return cursor.getString(0);
         }
 
@@ -139,5 +138,18 @@ public class AccountManager {
         }
 
         return db.insert(TableName, "", values);
+    }
+
+    public void updateDefault(String hash) {
+        ContentValues values = new ContentValues();
+        values.put(ColumnActive, 0);
+        db.update(TableName, values, ColumnActive + " = ?", new String[] {Integer.toString(1)});
+        values.clear();
+        values.put(ColumnActive, 1);
+        db.update(TableName, values, ColumnPublicHash + " = ?", new String[] {hash});
+    }
+
+    public void deleteAccount(String hash) {
+        db.delete(TableName,ColumnPublicHash + " = ?", new String[] {hash});
     }
 }
