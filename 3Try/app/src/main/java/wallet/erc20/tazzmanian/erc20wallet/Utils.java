@@ -26,6 +26,7 @@ public final class Utils {
     public static Utils getInstance() {
         if(INSTANCE == null) {
             INSTANCE = new Utils();
+            INSTANCE.buildConnection();
         }
         return INSTANCE;
     }
