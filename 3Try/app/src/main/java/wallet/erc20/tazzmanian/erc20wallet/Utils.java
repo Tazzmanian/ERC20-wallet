@@ -5,6 +5,8 @@ import org.web3j.crypto.CipherException;
 import org.web3j.crypto.Credentials;
 import org.web3j.crypto.MnemonicUtils;
 import org.web3j.crypto.WalletUtils;
+import org.web3j.protocol.Web3j;
+import org.web3j.protocol.http.HttpService;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,6 +19,7 @@ public final class Utils {
 //    private static Bip39Wallet WALLET;
     public static String MNEMONICS;
     private static Credentials credentials;
+    Web3j web3j;
 
     private Utils() {}
 
@@ -60,5 +63,12 @@ public final class Utils {
 
     public static String getAddress() {
         return credentials.getAddress();
+    }
+
+    public void buildConnection() {
+        ServerItems si = DBManager.sm.getActive();
+        if(si != null) {
+            web3j = Web3j.build(new HttpService(si.host + ":" + si.port));
+        }
     }
 }

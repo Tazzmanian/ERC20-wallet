@@ -160,4 +160,33 @@ public class ServerManager {
         values.put(ColumnName, name);
         db.update(TableName, values, ColumnID + " = ?", new String[]{id.toString()});
     }
+
+    public ServerItems getActive() {
+        Cursor cursor = db.rawQuery("Select * from " + TableName + " WHERE " +  ColumnID + " = 1;", null);
+
+        if (cursor != null && cursor.moveToFirst()) {
+            //get columns
+            int cid = cursor.getColumnIndex
+                    (ColumnID);
+            int cactive = cursor.getColumnIndex
+                    (ColumnActive);
+            int cname = cursor.getColumnIndex
+                    (ColumnName);
+            int chost = cursor.getColumnIndex
+                    (ColumnHost);
+            int cport = cursor.getColumnIndex
+                    (ColumnPort);
+
+            boolean thisActive = cursor.getLong(cactive) == 0 ? false : true;
+            String thisName = cursor.getString(cname);
+            String thisHost = cursor.getString(chost);
+            String thisPort = cursor.getString(cport);
+
+            cursor.close();
+
+            return new ServerItems(thisName, thisActive, thisHost, thisPort, cid);
+        }
+
+        return null;
+    }
 }

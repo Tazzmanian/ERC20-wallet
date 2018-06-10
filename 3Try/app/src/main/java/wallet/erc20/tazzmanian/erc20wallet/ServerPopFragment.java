@@ -50,6 +50,7 @@ public class ServerPopFragment extends DialogFragment {
             public void onClick(View v) {
                 dismiss();
                 DBManager.sm.updateDefault(id);
+                Utils.getInstance().buildConnection();
             }
         });
 
