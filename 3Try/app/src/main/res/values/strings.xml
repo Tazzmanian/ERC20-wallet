@@ -18,4 +18,6 @@
     <string name="title_remove">Remove</string>
     <string name="title_select">Select</string>
     <string name="title_public_address">Public Address</string>
+    <string name="edit_server_title">Edit Server</string>
+    <string name="update_btn">update</string>
 </resources>
