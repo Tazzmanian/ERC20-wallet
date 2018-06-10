@@ -101,12 +101,12 @@ public class ServerManager {
             values.put(ColumnActive, 1);
         }
 
-        cursor = db.rawQuery("Select * from " + TableName + " where " +
-                ColumnName + " LIKE " + name + ";", null);
-
-        if(cursor.getCount() > 0) {
-            return 0;
-        }
+//        cursor = db.rawQuery("Select * from " + TableName + " where " +
+//                ColumnName + " LIKE " + name + ";", null);
+//
+//        if(cursor.getCount() > 0) {
+//            return 0;
+//        }
 
         return db.insert(TableName, "", values);
     }

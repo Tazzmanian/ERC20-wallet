@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -126,30 +127,35 @@ public class ServerFragment extends Fragment {
 
             view.setBackgroundColor(s.active ? ContextCompat.getColor(getContext(), R.color.lightGreen) : ContextCompat.getColor(getContext(), R.color.gray));
 
-//            TextView textView = view.findViewById(R.id.account_ticket_text);
-//            textView.setText(s.hash);
-//
-//            textView.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-////                    Toast.makeText(getActivity(), s.hash, Toast.LENGTH_LONG).show();
-//                    FragmentManager fm = getFragmentManager();
-//                    final AccountPopFragment apf = new AccountPopFragment();
+            TextView name = view.findViewById(R.id.server_name);
+            name.setText(s.name);
+
+            TextView url = view.findViewById(R.id.server_url);
+            url.setText(s.host + ":" + s.port);
+
+            LinearLayout lo = view.findViewById(R.id.server_ticket_layout);
+
+            lo.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+//                    Toast.makeText(getActivity(), s.hash, Toast.LENGTH_LONG).show();
+                    FragmentManager fm = getFragmentManager();
+                    final AccountPopFragment apf = new AccountPopFragment();
 //                    Bundle args = new Bundle();
 //                    args.putString("hash", s.hash);
 //                    apf.setArguments(args);
-//                    apf.show(fm, "Dialog");
-//                    apf.setOnDismissListener(new DialogInterface.OnDismissListener(){
-//                        @Override
-//                        public void onDismiss(DialogInterface dialog) {
+                    apf.show(fm, "Dialog");
+                    apf.setOnDismissListener(new DialogInterface.OnDismissListener(){
+                        @Override
+                        public void onDismiss(DialogInterface dialog) {
 //                            ListView listView = getActivity().findViewById(R.id.account_list_view);
 //                            accountAdapter = new AccountsFragment.AccountsItemAdapter(DBManager.am.getAll());
 //                            listView.setAdapter(accountAdapter);
-//                        }
-//                    });
-//
-//                }
-//            });
+                        }
+                    });
+
+                }
+            });
 
             return view;
         }
