@@ -17,6 +17,7 @@ import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -90,6 +91,11 @@ public class ServerFragment extends Fragment {
         mListener = null;
     }
 
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//    }
+
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
@@ -140,17 +146,17 @@ public class ServerFragment extends Fragment {
                 public void onClick(View v) {
 //                    Toast.makeText(getActivity(), s.hash, Toast.LENGTH_LONG).show();
                     FragmentManager fm = getFragmentManager();
-                    final AccountPopFragment apf = new AccountPopFragment();
-//                    Bundle args = new Bundle();
-//                    args.putString("hash", s.hash);
-//                    apf.setArguments(args);
-                    apf.show(fm, "Dialog");
-                    apf.setOnDismissListener(new DialogInterface.OnDismissListener(){
+                    final ServerPopFragment spf = new ServerPopFragment();
+                    Bundle args = new Bundle();
+                    args.putLong("id", s.id);
+                    spf.setArguments(args);
+                    spf.show(fm, "Dialog");
+                    spf.setOnDismissListener(new DialogInterface.OnDismissListener(){
                         @Override
                         public void onDismiss(DialogInterface dialog) {
-//                            ListView listView = getActivity().findViewById(R.id.account_list_view);
-//                            accountAdapter = new AccountsFragment.AccountsItemAdapter(DBManager.am.getAll());
-//                            listView.setAdapter(accountAdapter);
+                            ListView listView = getActivity().findViewById(R.id.server_list_view);
+                            serverItemAdapter = new ServerItemAdapter(DBManager.sm.getAll());
+                            listView.setAdapter(serverItemAdapter);
                         }
                     });
 

@@ -110,4 +110,54 @@ public class ServerManager {
 
         return db.insert(TableName, "", values);
     }
+
+    public void updateDefault(Long id) {
+        ContentValues values = new ContentValues();
+        values.put(ColumnActive, 0);
+        db.update(TableName, values, ColumnActive + " = ?", new String[] {Integer.toString(1)});
+        values.clear();
+        values.put(ColumnActive, 1);
+        db.update(TableName, values, ColumnID + " = ?", new String[] {id.toString()});
+    }
+
+    public void deleteAccount(Long id) {
+        db.delete(TableName,ColumnID + " = ?", new String[] {id.toString()});
+    }
+
+    public ServerItems getItemById(Long id) {
+        Cursor cursor = db.rawQuery("Select * from " + TableName + ";", null);
+
+        if (cursor != null && cursor.moveToFirst()) {
+            //get columns
+            int cid = cursor.getColumnIndex
+                    (ColumnID);
+            int cactive = cursor.getColumnIndex
+                    (ColumnActive);
+            int cname = cursor.getColumnIndex
+                    (ColumnName);
+            int chost = cursor.getColumnIndex
+                    (ColumnHost);
+            int cport = cursor.getColumnIndex
+                    (ColumnPort);
+
+            boolean thisActive = cursor.getLong(cactive) == 0 ? false : true;
+            String thisName = cursor.getString(cname);
+            String thisHost = cursor.getString(chost);
+            String thisPort = cursor.getString(cport);
+
+            cursor.close();
+
+            return new ServerItems(thisName, thisActive, thisHost, thisPort, id);
+        }
+
+        return null;
+    }
+
+    public void update(String name, String host, String port, Long id) {
+        ContentValues values = new ContentValues();
+        values.put(ColumnPort, port);
+        values.put(ColumnHost, host);
+        values.put(ColumnName, name);
+        db.update(TableName, values, ColumnID + " = ?", new String[]{id.toString()});
+    }
 }

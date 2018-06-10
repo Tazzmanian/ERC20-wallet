@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -24,6 +25,7 @@ public class AddServerFragment extends Fragment {
     private EditText name, host, port;
     private Button b;
     private View view;
+
     //  create a textWatcher member
     private TextWatcher mTextWatcher = new TextWatcher() {
         @Override
@@ -78,17 +80,33 @@ public class AddServerFragment extends Fragment {
         name = (EditText) view.findViewById(R.id.name);
         port = (EditText) view.findViewById(R.id.port);
         host = (EditText) view.findViewById(R.id.host);
-        b = (Button) view.findViewById(R.id.button3);
+        b = view.findViewById(R.id.add);
+
+        if(getArguments() != null) {
+            TextView tv = view.findViewById(R.id.title_id);
+            tv.setText(R.string.edit_server_title);
+            b.setText(R.string.update_btn);
+            b.setEnabled(true);
+            name.setText(getArguments().getString("name"));
+            port.setText(getArguments().getString("port"));
+            host.setText(getArguments().getString("host"));
+        }
 
         name.addTextChangedListener(mTextWatcher);
         port.addTextChangedListener(mTextWatcher);
         host.addTextChangedListener(mTextWatcher);
 
-        b = view.findViewById(R.id.add);
         b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DBManager.sm.insert(name.getText().toString(), host.getText().toString(), port.getText().toString());
+                if(getArguments() == null) {
+                    DBManager.sm.insert(name.getText().toString(), host.getText().toString(), port.getText().toString());
+                } else {
+                    long id = getArguments().getLong("id");
+                    if(id > 0) {
+                        DBManager.sm.update(name.getText().toString(), host.getText().toString(), port.getText().toString(), id);
+                    }
+                }
                 FragmentManager fm = getActivity().getSupportFragmentManager();
                 fm.popBackStack();
             }
