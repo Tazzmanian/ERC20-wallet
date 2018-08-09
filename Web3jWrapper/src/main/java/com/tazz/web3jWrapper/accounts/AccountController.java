@@ -34,6 +34,4 @@ public class AccountController {
         return accountService.createNewAccount(dto.getPassword()); 
     }
     
-    
-    
 }

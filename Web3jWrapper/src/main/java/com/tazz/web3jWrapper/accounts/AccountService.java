@@ -24,10 +24,13 @@ public class AccountService {
     
     public ArrayList<String> createNewAccount(String password) {
         try {
-            Bip39Wallet wallet = WalletUtils.generateBip39Wallet(password, new File(""));
+            String dir = WalletUtils.getDefaultKeyDirectory();
+            Bip39Wallet wallet = WalletUtils.generateBip39Wallet(password, new File(dir));
             String mnemonics = wallet.getMnemonic();
             String[] words = mnemonics.split(" ");
             ArrayList<String> arr = new ArrayList(Arrays.stream(words).collect(Collectors.toList()));
+            File file = new File(dir + File.separator + wallet.getFilename());
+            file.delete();
             return arr;
         } catch (Exception e) {
             log.info("create file" + e);
