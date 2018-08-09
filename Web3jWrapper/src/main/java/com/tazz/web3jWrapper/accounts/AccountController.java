@@ -30,7 +30,7 @@ public class AccountController {
     }
     
     @PostMapping(value = "create", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ArrayList<String> createAccount(@RequestBody CreateDTO dto) {
+    public CreateResponseDTO createAccount(@RequestBody CreateDTO dto) {
         return accountService.createNewAccount(dto.getPassword()); 
     }
     

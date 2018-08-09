@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.web3j.crypto.Bip39Wallet;
+import org.web3j.crypto.Credentials;
 import org.web3j.crypto.WalletUtils;
 
 /**
@@ -22,20 +23,22 @@ import org.web3j.crypto.WalletUtils;
 @Service
 public class AccountService {
     
-    public ArrayList<String> createNewAccount(String password) {
+    public CreateResponseDTO createNewAccount(String password) {
+        CreateResponseDTO dto = new CreateResponseDTO();
         try {
             String dir = WalletUtils.getDefaultKeyDirectory();
             Bip39Wallet wallet = WalletUtils.generateBip39Wallet(password, new File(dir));
-            String mnemonics = wallet.getMnemonic();
-            String[] words = mnemonics.split(" ");
-            ArrayList<String> arr = new ArrayList(Arrays.stream(words).collect(Collectors.toList()));
+//            String[] words = mnemonics.split(" ");
+//            ArrayList<String> arr = new ArrayList(Arrays.stream(words).collect(Collectors.toList()));
+            dto.setMnemonics(wallet.getMnemonic());
             File file = new File(dir + File.separator + wallet.getFilename());
+            Credentials cred = WalletUtils.loadCredentials(password, file);
+            dto.setHash(cred.getAddress());
             file.delete();
-            return arr;
         } catch (Exception e) {
             log.info("create file" + e);
         }
         
-        return new ArrayList<String>();
+        return dto;
     }
 }
