@@ -9,8 +9,8 @@
             <goal>spring-boot:run</goal>
         </goals>
         <properties>
-            <run.jvmArguments>-noverify -XX:TieredStopAtLevel=1 </run.jvmArguments>
-            <run.mainClass>com.tazz.web3jWrapper.Web3jWrapperApplication</run.mainClass>
+            <spring-boot.run.jvmArguments>-noverify -XX:TieredStopAtLevel=1</spring-boot.run.jvmArguments>
+            <spring-boot.run.mainClass>com.tazz.web3jWrapper.Web3jWrapperApplication</spring-boot.run.mainClass>
             <Env.SPRING_OUTPUT_ANSI_ENABLED>always</Env.SPRING_OUTPUT_ANSI_ENABLED>
         </properties>
     </action>
@@ -20,12 +20,15 @@
             <packaging>jar</packaging>
         </packagings>
         <goals>
-            <goal>spring-boot:run</goal>
+            <goal>process-classes</goal>
+            <goal>org.codehaus.mojo:exec-maven-plugin:1.2.1:exec</goal>
         </goals>
         <properties>
-            <run.jvmArguments>-Xdebug -Xrunjdwp:transport=dt_socket,server=n,address=${jpda.address} -noverify -XX:TieredStopAtLevel=1 </run.jvmArguments>
-            <run.mainClass>com.tazz.web3jWrapper.Web3jWrapperApplication</run.mainClass>
-            <Env.SPRING_OUTPUT_ANSI_ENABLED>always</Env.SPRING_OUTPUT_ANSI_ENABLED>
+                <exec.args>-Xdebug -Xrunjdwp:transport=dt_socket,server=n,address=${jpda.address} -classpath %classpath com.tazz.web3jWrapper.Web3jWrapperApplication</exec.args>
+                <exec.executable>java</exec.executable>
+            
+            
+            
             <jpda.listen>true</jpda.listen>
         </properties>
     </action>
