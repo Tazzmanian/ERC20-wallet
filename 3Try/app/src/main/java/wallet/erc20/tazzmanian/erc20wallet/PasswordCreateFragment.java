@@ -7,12 +7,24 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+import com.loopj.android.http.*;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.UnsupportedEncodingException;
+
+import cz.msebera.android.httpclient.Header;
+import cz.msebera.android.httpclient.entity.StringEntity;
+import cz.msebera.android.httpclient.message.BasicHeader;
+import cz.msebera.android.httpclient.protocol.HTTP;
 
 
 /**
@@ -117,10 +129,36 @@ public class PasswordCreateFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-                Utils util = Utils.getInstance();
-                util.createWallet(et1.getText().toString(), getActivity().getExternalFilesDir("/keys/"));
-                util.loadWallet(et1.getText().toString(), Utils.MNEMONICS);
-                DBManager.am.insert(Utils.MNEMONICS, Utils.getAddress());
+                AsyncHttpClient client = new AsyncHttpClient();
+                JSONObject jsonParams = new JSONObject();
+                StringEntity entity = null;
+                try {
+                    jsonParams.put("password", et1.getText().toString());
+                    entity = new StringEntity(jsonParams.toString());
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                entity.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
+
+                client.post(getActivity(), "http://10.0.2.2:5000/accounts/create", entity, "application/json", new JsonHttpResponseHandler() {
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                        Log.d("create", "account succeded");
+                        try {
+                            DBManager.am.insert(response.getString("mnemonics"), response.getString("hash"));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                        Log.e("create", "account failed");
+                    }
+                });
+
                 Intent intent = new Intent(getActivity(), MainActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
