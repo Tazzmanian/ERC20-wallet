@@ -34,4 +34,9 @@ public class AccountController {
         return accountService.createNewAccount(dto.getPassword()); 
     }
     
+    @PostMapping(value = "restore", produces = MediaType.APPLICATION_JSON_VALUE)
+    public CreateResponseDTO createAccount(@RequestBody RestoreRequestDTO dto) {
+        return accountService.restore(dto); 
+    }
+    
 }

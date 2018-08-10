@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.web3j.crypto.Bip39Wallet;
 import org.web3j.crypto.Credentials;
 import org.web3j.crypto.WalletUtils;
+import org.web3j.protocol.Web3j;
 
 /**
  *
@@ -40,5 +41,16 @@ public class AccountService {
         }
         
         return dto;
+    }
+
+    CreateResponseDTO restore(RestoreRequestDTO dto) {
+        Credentials cred = WalletUtils.loadBip39Credentials(dto.getPassword(), dto.getMnemonics());
+        if(!WalletUtils.isValidAddress(cred.getAddress())) {
+            return null;
+        }
+        CreateResponseDTO res = new CreateResponseDTO();
+        res.setMnemonics(dto.getMnemonics());
+        res.setHash(cred.getAddress());
+        return res;
     }
 }
