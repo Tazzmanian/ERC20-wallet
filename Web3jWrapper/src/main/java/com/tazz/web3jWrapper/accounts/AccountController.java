@@ -35,7 +35,7 @@ public class AccountController {
     }
     
     @PostMapping(value = "restore", produces = MediaType.APPLICATION_JSON_VALUE)
-    public CreateResponseDTO createAccount(@RequestBody RestoreRequestDTO dto) {
+    public CreateResponseDTO restoreAccount(@RequestBody RestoreRequestDTO dto) {
         return accountService.restore(dto); 
     }
     
