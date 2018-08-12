@@ -169,7 +169,7 @@ public class AccountsFragment extends Fragment {
             textView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-//                    Toast.makeText(getActivity(), s.hash, Toast.LENGTH_LONG).show();
+                    /* Toast.makeText(getActivity(), s.hash, Toast.LENGTH_LONG).show(); */
                     FragmentManager fm = getFragmentManager();
                     final AccountPopFragment apf = new AccountPopFragment();
                     Bundle args = new Bundle();
