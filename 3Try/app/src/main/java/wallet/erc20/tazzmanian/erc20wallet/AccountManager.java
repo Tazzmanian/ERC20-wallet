@@ -82,8 +82,9 @@ public class AccountManager {
                 list.add(new AccountItems(thisMnemonics, thisId, thisHash, thisActive));
             }
             while (cursor.moveToNext());
-            cursor.close();
         }
+
+        cursor.close();
 
         return list;
     }
@@ -104,7 +105,9 @@ public class AccountManager {
         }
 
         cursor.moveToFirst();
-        return cursor.getString(0);
+        String str = cursor.getString(0);
+        cursor.close();
+        return str;
     }
 
     public String getActiveHashAccount() {
@@ -122,7 +125,9 @@ public class AccountManager {
         }
 
         cursor.moveToFirst();
-        return cursor.getString(0);
+        String str = cursor.getString(0);
+        cursor.close();
+        return str;
     }
 
     public long insert(String mnemonics, String address) {
@@ -136,8 +141,20 @@ public class AccountManager {
         if(cursor.getCount() == 0) {
             values.put(ColumnActive, 1);
         }
+        cursor.close();
 
         return db.insert(TableName, "", values);
+    }
+
+    public boolean exists(String hash) {
+        Cursor cursor = db.query(TableName, new String[] {ColumnID}, ColumnPublicHash + " LIKE ?", new String[] {hash}, null, null, null);
+
+        if(cursor.getCount() == 0) {
+            cursor.close();
+            return false;
+        }
+        cursor.close();
+        return true;
     }
 
     public void updateDefault(String hash) {

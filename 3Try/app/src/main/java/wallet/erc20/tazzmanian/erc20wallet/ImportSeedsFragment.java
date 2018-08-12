@@ -230,30 +230,30 @@ public class ImportSeedsFragment extends Fragment {
         seed11.addTextChangedListener(mTextWatcher);
 
         b = (Button) view.findViewById(R.id.button4);
-//
-//        b.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                /* Toast.makeText(getActivity(), s.hash, Toast.LENGTH_LONG).show(); */
-//                FragmentManager fm = getFragmentManager();
-//                final ImportAccountPassPopFragment pop = new ImportAccountPassPopFragment();
-//                Bundle args = new Bundle();
-//                args.putString("mnemonics", seed0.getText().toString() + " " +
-//                        seed1.getText().toString() + " " +
-//                        seed2.getText().toString() + " " +
-//                        seed3.getText().toString() + " " +
-//                        seed4.getText().toString() + " " +
-//                        seed5.getText().toString() + " " +
-//                        seed6.getText().toString() + " " +
-//                        seed7.getText().toString() + " " +
-//                        seed8.getText().toString() + " " +
-//                        seed9.getText().toString() + " " +
-//                        seed10.getText().toString() + " " +
-//                        seed11.getText().toString());
-//                pop.setArguments(args);
-//                pop.show(fm, "Dialog");
-//            }
-//        });
+
+        b.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                /* Toast.makeText(getActivity(), s.hash, Toast.LENGTH_LONG).show(); */
+                FragmentManager fm = getFragmentManager();
+                final ImportAccountPassPopFragment pop = new ImportAccountPassPopFragment();
+                Bundle args = new Bundle();
+                args.putString("mnemonics", seed0.getText().toString() + " " +
+                        seed1.getText().toString() + " " +
+                        seed2.getText().toString() + " " +
+                        seed3.getText().toString() + " " +
+                        seed4.getText().toString() + " " +
+                        seed5.getText().toString() + " " +
+                        seed6.getText().toString() + " " +
+                        seed7.getText().toString() + " " +
+                        seed8.getText().toString() + " " +
+                        seed9.getText().toString() + " " +
+                        seed10.getText().toString() + " " +
+                        seed11.getText().toString());
+                pop.setArguments(args);
+                pop.show(fm, "Dialog");
+            }
+        });
 
         return view;
     }

@@ -103,7 +103,7 @@ public class ImportAccountPassPopFragment extends DialogFragment {
                 JSONObject jsonParams = new JSONObject();
                 StringEntity entity = null;
                 try {
-                    jsonParams.put("password", password);
+                    jsonParams.put("password", password.getText().toString());
                     jsonParams.put("mnemonics", mnemonics);
                     entity = new StringEntity(jsonParams.toString());
                 } catch (UnsupportedEncodingException e) {
@@ -121,7 +121,11 @@ public class ImportAccountPassPopFragment extends DialogFragment {
                             if(response.getString("hash").isEmpty() || response.getString("mnemonics").isEmpty()) {
                                 Toast.makeText(view.getContext(), "Something went wrong", Toast.LENGTH_LONG).show();
                             } else {
-                                DBManager.am.insert(response.getString("mnemonics"), response.getString("hash"));
+                                if(DBManager.am.exists(response.getString("hash"))) {
+                                    Toast.makeText(view.getContext(), "Account " + response.getString("hash") +"already exists.", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    DBManager.am.insert(response.getString("mnemonics"), response.getString("hash"));
+                                }
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();

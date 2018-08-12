@@ -10,7 +10,7 @@ import android.widget.Toast;
 
 public class WelcomeActivity extends AppCompatActivity
         implements ImportSeedsFragment.OnFragmentInteractionListener, WelcomeFragment.OnFragmentInteractionListener,
-                    PasswordCreateFragment.OnFragmentInteractionListener {
+                    PasswordCreateFragment.OnFragmentInteractionListener, ImportAccountPassPopFragment.OnFragmentInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
