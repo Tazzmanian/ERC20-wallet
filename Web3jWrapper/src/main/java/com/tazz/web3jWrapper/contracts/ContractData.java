@@ -5,10 +5,17 @@
  */
 package com.tazz.web3jWrapper.contracts;
 
+import java.math.BigInteger;
+import lombok.Data;
+
 /**
  *
  * @author Tazzmanian
  */
-class ContactData {
-    
+@Data
+class ContractData {
+    private String symbol;
+    private String name;
+    private BigInteger totalSupply;
+    private BigInteger decimals;
 }

@@ -5,10 +5,15 @@
  */
 package com.tazz.web3jWrapper.contracts;
 
+import lombok.Data;
+
 /**
  *
  * @author Tazzmanian
  */
+@Data
 class LoadContractDTO {
-    
+    private String contractAddress;
+    private String network;
+    private String publicAddress;
 }
