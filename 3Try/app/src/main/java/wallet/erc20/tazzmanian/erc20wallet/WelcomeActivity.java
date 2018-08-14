@@ -6,7 +6,9 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Toast;
+
+import wallet.erc20.tazzmanian.erc20wallet.accounts.ImportAccountPassPopFragment;
+import wallet.erc20.tazzmanian.erc20wallet.db.DBManager;
 
 public class WelcomeActivity extends AppCompatActivity
         implements ImportSeedsFragment.OnFragmentInteractionListener, WelcomeFragment.OnFragmentInteractionListener,

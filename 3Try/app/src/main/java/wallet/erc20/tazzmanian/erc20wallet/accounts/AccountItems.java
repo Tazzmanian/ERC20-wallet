@@ -1,4 +1,4 @@
-package wallet.erc20.tazzmanian.erc20wallet;
+package wallet.erc20.tazzmanian.erc20wallet.accounts;
 
 public class AccountItems {
 
@@ -7,7 +7,7 @@ public class AccountItems {
     public String hash;
     public boolean active;
 
-    AccountItems(
+    public AccountItems(
             String mnemonics,
             long id,
             String hash,

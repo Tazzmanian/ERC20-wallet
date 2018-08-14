@@ -1,12 +1,13 @@
-package wallet.erc20.tazzmanian.erc20wallet;
+package wallet.erc20.tazzmanian.erc20wallet.contracts;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,35 +28,62 @@ import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.entity.StringEntity;
 import cz.msebera.android.httpclient.message.BasicHeader;
 import cz.msebera.android.httpclient.protocol.HTTP;
+import wallet.erc20.tazzmanian.erc20wallet.MainActivity;
+import wallet.erc20.tazzmanian.erc20wallet.R;
+import wallet.erc20.tazzmanian.erc20wallet.db.DBManager;
 
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link ImportAccountPassPopFragment.OnFragmentInteractionListener} interface
+ * {@link AddContractFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link ImportAccountPassPopFragment#newInstance} factory method to
+ * Use the {@link AddContractFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ImportAccountPassPopFragment extends DialogFragment {
+public class AddContractFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
+    private EditText hash;
+    private Button b;
+    private View view;
+
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    private EditText password;
 
     private OnFragmentInteractionListener mListener;
-    private DialogInterface.OnDismissListener onDismissListener;
 
-    public void setOnDismissListener(DialogInterface.OnDismissListener onDismissListener) {
-        this.onDismissListener = onDismissListener;
+    private TextWatcher mTextWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+            // check Fields For Empty Values
+            checkFieldsForEmptyValues();
+        }
+    };
+
+    void checkFieldsForEmptyValues(){
+        String h = hash.getText().toString();
+
+        if(h.isEmpty()){
+            b.setEnabled(false);
+        } else {
+            b.setEnabled(true);
+        }
     }
 
-    public ImportAccountPassPopFragment() {
+    public AddContractFragment() {
         // Required empty public constructor
     }
 
@@ -65,11 +93,11 @@ public class ImportAccountPassPopFragment extends DialogFragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment ImportAccountPassPopFragment.
+     * @return A new instance of fragment AddContractFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static ImportAccountPassPopFragment newInstance(String param1, String param2) {
-        ImportAccountPassPopFragment fragment = new ImportAccountPassPopFragment();
+    public static AddContractFragment newInstance(String param1, String param2) {
+        AddContractFragment fragment = new AddContractFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -90,21 +118,23 @@ public class ImportAccountPassPopFragment extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_import_account_pass_pop, container, false);
+        view =  inflater.inflate(R.layout.fragment_add_contract, container, false);
 
-        Button importBtn = view.findViewById(R.id.import_btn);
-        password = view.findViewById(R.id.passEdt);
-        final String mnemonics = getArguments().getString("mnemonics");
+        hash = view.findViewById(R.id.hash);
+        hash.addTextChangedListener(mTextWatcher);
 
-        importBtn.setOnClickListener(new View.OnClickListener() {
+        b = view.findViewById(R.id.add);
+
+        b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 AsyncHttpClient client = new AsyncHttpClient();
                 JSONObject jsonParams = new JSONObject();
                 StringEntity entity = null;
                 try {
-                    jsonParams.put("password", password.getText().toString());
-                    jsonParams.put("mnemonics", mnemonics);
+                    jsonParams.put("contractAddress", hash.getText().toString());
+                    jsonParams.put("network", DBManager.sm.getActive().toString());
+                    jsonParams.put("publicAddress", DBManager.am.getActiveHashAccount());
                     entity = new StringEntity(jsonParams.toString());
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
@@ -113,40 +143,23 @@ public class ImportAccountPassPopFragment extends DialogFragment {
                 }
                 entity.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
 
-                client.post(getActivity(), "http://10.0.2.2:5000/accounts/restore", entity, "application/json", new JsonHttpResponseHandler() {
+                client.post(getActivity(), "http://10.0.2.2:5000/contracts/load", entity, "application/json", new JsonHttpResponseHandler() {
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                         Log.d("create", "account succeded");
                         try {
-                            if(response.getString("hash").isEmpty() || response.getString("mnemonics").isEmpty()) {
-                                Toast.makeText(view.getContext(), "Something went wrong", Toast.LENGTH_LONG).show();
-                            } else {
-                                if(DBManager.am.exists(response.getString("hash"))) {
-                                    Toast.makeText(view.getContext(), "Account " + response.getString("hash") +"already exists.", Toast.LENGTH_SHORT).show();
-                                } else {
-                                    DBManager.am.insert(response.getString("mnemonics"), response.getString("hash"));
-                                }
-                            }
+                            Toast.makeText(view.getContext(), response.getString("symbol")
+                                    + " " + response.getString("name") + " " + response.getString("totalSupply") + " "
+                                    + response.getString("decimals"), Toast.LENGTH_SHORT).show();
+                            FragmentManager fm = getActivity().getSupportFragmentManager();
+                            fm.popBackStack();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        dismiss();
-                        Intent intent = new Intent(getActivity(), MainActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(intent);
-                        getActivity().finish();
-                    }
-
-                    @Override
-                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                        Log.e("create", "account failed");
-                        Toast.makeText(view.getContext(), "Something went wrong", Toast.LENGTH_LONG).show();
-                        dismiss();
                     }
                 });
             }
         });
-
         return view;
     }
 
@@ -172,15 +185,6 @@ public class ImportAccountPassPopFragment extends DialogFragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
-    }
-
-    @Override
-    public void onDismiss(DialogInterface dialog) {
-        super.onDismiss(dialog);
-//        Toast.makeText(getActivity(), "test1", Toast.LENGTH_LONG).show();
-        if (onDismissListener != null) {
-            onDismissListener.onDismiss(dialog);
-        }
     }
 
     /**

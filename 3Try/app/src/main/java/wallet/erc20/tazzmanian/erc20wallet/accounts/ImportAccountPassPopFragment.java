@@ -1,12 +1,12 @@
-package wallet.erc20.tazzmanian.erc20wallet;
+package wallet.erc20.tazzmanian.erc20wallet.accounts;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +14,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-import com.loopj.android.http.*;
+
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -25,18 +27,20 @@ import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.entity.StringEntity;
 import cz.msebera.android.httpclient.message.BasicHeader;
 import cz.msebera.android.httpclient.protocol.HTTP;
+import wallet.erc20.tazzmanian.erc20wallet.MainActivity;
+import wallet.erc20.tazzmanian.erc20wallet.R;
 import wallet.erc20.tazzmanian.erc20wallet.db.DBManager;
 
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link PasswordCreateFragment.OnFragmentInteractionListener} interface
+ * {@link ImportAccountPassPopFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link PasswordCreateFragment#newInstance} factory method to
+ * Use the {@link ImportAccountPassPopFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class PasswordCreateFragment extends Fragment {
+public class ImportAccountPassPopFragment extends DialogFragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -45,45 +49,16 @@ public class PasswordCreateFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private EditText password;
 
     private OnFragmentInteractionListener mListener;
+    private DialogInterface.OnDismissListener onDismissListener;
 
-    private EditText et1,et2;
-    private Button b;
-    private View view;
-    //  create a textWatcher member
-    private TextWatcher mTextWatcher = new TextWatcher() {
-        @Override
-        public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
-        }
-
-        @Override
-        public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
-        }
-
-        @Override
-        public void afterTextChanged(Editable editable) {
-            // check Fields For Empty Values
-            checkFieldsForEmptyValues();
-        }
-    };
-
-    void checkFieldsForEmptyValues(){
-        String s1 = et1.getText().toString();
-        String s2 = et2.getText().toString();
-
-        if(s1.equals("")) {
-            b.setEnabled(false);
-        } else if(s1.equals("")|| s2.equals("") || !s1.equals(s2)){
-            Toast.makeText(view.getContext(), "false", Toast.LENGTH_SHORT).show();
-            b.setEnabled(false);
-        } else {
-            Toast.makeText(view.getContext(), "true", Toast.LENGTH_SHORT).show();
-            b.setEnabled(true);
-        }
+    public void setOnDismissListener(DialogInterface.OnDismissListener onDismissListener) {
+        this.onDismissListener = onDismissListener;
     }
 
-    public PasswordCreateFragment() {
+    public ImportAccountPassPopFragment() {
         // Required empty public constructor
     }
 
@@ -93,11 +68,11 @@ public class PasswordCreateFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment PasswordCreateFragment.
+     * @return A new instance of fragment ImportAccountPassPopFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static PasswordCreateFragment newInstance(String param1, String param2) {
-        PasswordCreateFragment fragment = new PasswordCreateFragment();
+    public static ImportAccountPassPopFragment newInstance(String param1, String param2) {
+        ImportAccountPassPopFragment fragment = new ImportAccountPassPopFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -118,25 +93,21 @@ public class PasswordCreateFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        view = inflater.inflate(R.layout.fragment_password_create, container, false);
-        et1 = (EditText) view.findViewById(R.id.editText);
-        et2 = (EditText) view.findViewById(R.id.editText2);
-        b = (Button) view.findViewById(R.id.button3);
-        DBManager.getInstance(getContext());
+        View view = inflater.inflate(R.layout.fragment_import_account_pass_pop, container, false);
 
-        // set listeners
-        et1.addTextChangedListener(mTextWatcher);
-        et2.addTextChangedListener(mTextWatcher);
+        Button importBtn = view.findViewById(R.id.import_btn);
+        password = view.findViewById(R.id.passEdt);
+        final String mnemonics = getArguments().getString("mnemonics");
 
-        b.setOnClickListener(new View.OnClickListener() {
-
+        importBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 AsyncHttpClient client = new AsyncHttpClient();
                 JSONObject jsonParams = new JSONObject();
                 StringEntity entity = null;
                 try {
-                    jsonParams.put("password", et1.getText().toString());
+                    jsonParams.put("password", password.getText().toString());
+                    jsonParams.put("mnemonics", mnemonics);
                     entity = new StringEntity(jsonParams.toString());
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
@@ -145,32 +116,40 @@ public class PasswordCreateFragment extends Fragment {
                 }
                 entity.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
 
-                client.post(getActivity(), "http://10.0.2.2:5000/accounts/create", entity, "application/json", new JsonHttpResponseHandler() {
+                client.post(getActivity(), "http://10.0.2.2:5000/accounts/restore", entity, "application/json", new JsonHttpResponseHandler() {
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                         Log.d("create", "account succeded");
                         try {
-                            DBManager.am.insert(response.getString("mnemonics"), response.getString("hash"));
+                            if(response.getString("hash").isEmpty() || response.getString("mnemonics").isEmpty()) {
+                                Toast.makeText(view.getContext(), "Something went wrong", Toast.LENGTH_LONG).show();
+                            } else {
+                                if(DBManager.am.exists(response.getString("hash"))) {
+                                    Toast.makeText(view.getContext(), "Account " + response.getString("hash") +"already exists.", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    DBManager.am.insert(response.getString("mnemonics"), response.getString("hash"));
+                                }
+                            }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
+                        dismiss();
+                        Intent intent = new Intent(getActivity(), MainActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                        getActivity().finish();
                     }
 
                     @Override
                     public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                         Log.e("create", "account failed");
+                        Toast.makeText(view.getContext(), "Something went wrong", Toast.LENGTH_LONG).show();
+                        dismiss();
                     }
                 });
-
-                Intent intent = new Intent(getActivity(), MainActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
-                getActivity().finish();
             }
         });
 
-        // run once to disable if empty
-        checkFieldsForEmptyValues();
         return view;
     }
 
@@ -196,6 +175,15 @@ public class PasswordCreateFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        super.onDismiss(dialog);
+//        Toast.makeText(getActivity(), "test1", Toast.LENGTH_LONG).show();
+        if (onDismissListener != null) {
+            onDismissListener.onDismiss(dialog);
+        }
     }
 
     /**

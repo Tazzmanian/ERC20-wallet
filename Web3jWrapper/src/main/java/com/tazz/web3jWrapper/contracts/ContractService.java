@@ -35,10 +35,10 @@ public class ContractService {
         ERC20Wrapper contract = ERC20Wrapper.load(dto.getContractAddress(), web3, clientManager, DefaultGasProvider.GAS_PRICE, Transfer.GAS_LIMIT);
         
         try {
-            data.setTotalSupply(contract._totalSupply().send());
+            data.setTotalSupply(contract._totalSupply().send().toString());
             data.setName(contract.name().send());
             data.setSymbol(contract.symbol().send());
-            data.setDecimals(contract.decimals().send());
+            data.setDecimals(contract.decimals().send().toString());
         } catch (Exception ex) {
             Logger.getLogger(ContractService.class.getName()).log(Level.SEVERE, null, ex);
             log.error(ContractService.class.getName() + ex);

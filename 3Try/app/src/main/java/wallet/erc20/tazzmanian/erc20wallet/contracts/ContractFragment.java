@@ -1,41 +1,40 @@
-package wallet.erc20.tazzmanian.erc20wallet;
+package wallet.erc20.tazzmanian.erc20wallet.contracts;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.Toast;
+
+import wallet.erc20.tazzmanian.erc20wallet.R;
+import wallet.erc20.tazzmanian.erc20wallet.servers.AddServerFragment;
 
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link AccountPopFragment.OnFragmentInteractionListener} interface
+ * {@link ContractFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link AccountPopFragment#newInstance} factory method to
+ * Use the {@link ContractFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class AccountPopFragment extends DialogFragment {
+public class ContractFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
+    // TODO: Rename and change types of parameters
+    private String mParam1;
+    private String mParam2;
+
     private OnFragmentInteractionListener mListener;
-    private DialogInterface.OnDismissListener onDismissListener;
 
-    public void setOnDismissListener(DialogInterface.OnDismissListener onDismissListener) {
-        this.onDismissListener = onDismissListener;
-    }
-
-    public AccountPopFragment() {
+    public ContractFragment() {
         // Required empty public constructor
     }
 
@@ -45,11 +44,11 @@ public class AccountPopFragment extends DialogFragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment AccountPopFragment.
+     * @return A new instance of fragment ContractFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static AccountPopFragment newInstance(String param1, String param2) {
-        AccountPopFragment fragment = new AccountPopFragment();
+    public static ContractFragment newInstance(String param1, String param2) {
+        ContractFragment fragment = new ContractFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -60,31 +59,28 @@ public class AccountPopFragment extends DialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            mParam1 = getArguments().getString(ARG_PARAM1);
+            mParam2 = getArguments().getString(ARG_PARAM2);
+        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_account_pop, container, false);
+        View view = inflater.inflate(R.layout.fragment_contract, container, false);
 
-        Button defaultBtn = view.findViewById(R.id.default_btn);
-        final String hash = getArguments().getString("hash");
 
-        defaultBtn.setOnClickListener(new View.OnClickListener() {
+        FloatingActionButton fab = view.findViewById(R.id.fab_add_contract);
+        fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dismiss();
-                DBManager.am.updateDefault(hash);
-            }
-        });
-
-        Button deleteBtn = view.findViewById(R.id.delete_btn);
-        deleteBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dismiss();
-                DBManager.am.deleteAccount(hash);
+                FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+                AddContractFragment acf = new AddContractFragment();
+                fragmentTransaction.replace(R.id.main_frame_layout, acf);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
             }
         });
 
@@ -113,20 +109,6 @@ public class AccountPopFragment extends DialogFragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
-    }
-
-    @Override
-    public void onCancel(DialogInterface dialog) {
-        super.onCancel(dialog);
-    }
-
-    @Override
-    public void onDismiss(DialogInterface dialog) {
-        super.onDismiss(dialog);
-//        Toast.makeText(getActivity(), "test1", Toast.LENGTH_LONG).show();
-        if (onDismissListener != null) {
-            onDismissListener.onDismiss(dialog);
-        }
     }
 
     /**

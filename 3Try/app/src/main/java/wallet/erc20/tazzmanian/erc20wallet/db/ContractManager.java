@@ -1,18 +1,21 @@
-package wallet.erc20.tazzmanian.erc20wallet;
+package wallet.erc20.tazzmanian.erc20wallet.db;
 
-import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 
 public class ContractManager {
 
     static final String TableName = "Contracts";
     static final String ColumnHash = "Hash";
-    static final String ColumnName = "Name";
+    static final String ColumnName = "TokenName";
+    static final String ColumnSymbol = "Symbol";
+    static final String ColumnTotalSupply = "TotalSupply";
+    static final String ColumnDecimals = "Decimals";
 
     static final String CreateTable = "Create table IF NOT EXISTS " + TableName +
-            "(ID integer PRIMARY KEY AUTOINCREMENT, " + ColumnHash +
-            " text, " + ColumnName + " text);";
+            "(ID integer PRIMARY KEY AUTOINCREMENT, " +
+            ColumnHash + " text, " + ColumnSymbol + " text, " +
+            ColumnTotalSupply + " text, " + ColumnDecimals + " text, "
+            + ColumnName + " text);";
 
     static final String DropTable = "DROP table IF EXISTS " + TableName + ";";
 

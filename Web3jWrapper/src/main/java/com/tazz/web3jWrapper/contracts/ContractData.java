@@ -16,6 +16,6 @@ import lombok.Data;
 class ContractData {
     private String symbol;
     private String name;
-    private BigInteger totalSupply;
-    private BigInteger decimals;
+    private String totalSupply;
+    private String decimals;
 }

@@ -1,4 +1,4 @@
-package wallet.erc20.tazzmanian.erc20wallet;
+package wallet.erc20.tazzmanian.erc20wallet.servers;
 
 public class ServerItems {
     String name;
@@ -13,5 +13,10 @@ public class ServerItems {
         this.host = host;
         this.port = port;
         this.id = id;
+    }
+
+    @Override
+    public String toString() {
+        return host + ":" + port;
     }
 }
