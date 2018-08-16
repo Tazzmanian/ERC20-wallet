@@ -1,5 +1,7 @@
 package wallet.erc20.tazzmanian.erc20wallet.db;
 
+import android.content.ContentValues;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 public class ContractManager {
@@ -42,5 +44,16 @@ public class ContractManager {
 
     public void updateTable() {
         db.execSQL(DropTable);
+    }
+
+    public long insert(String hash, String tokenName, String tokenSymbol, String totalSupply, String decimals) {
+        ContentValues values = new ContentValues();
+        values.put(ColumnDecimals, decimals);
+        values.put(ColumnHash, hash);
+        values.put(ColumnName, tokenName);
+        values.put(ColumnSymbol, tokenSymbol);
+        values.put(ColumnTotalSupply, totalSupply);
+
+        return db.insert(TableName, "", values);
     }
 }

@@ -151,11 +151,20 @@ public class AddContractFragment extends Fragment {
                             Toast.makeText(view.getContext(), response.getString("symbol")
                                     + " " + response.getString("name") + " " + response.getString("totalSupply") + " "
                                     + response.getString("decimals"), Toast.LENGTH_SHORT).show();
+
+                            DBManager.cm.insert(hash.getText().toString(), response.getString("name"), response.getString("symbol"),
+                                    response.getString("totalSupply"), response.getString("decimals"));
+
                             FragmentManager fm = getActivity().getSupportFragmentManager();
                             fm.popBackStack();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                        Toast.makeText(view.getContext(), "Something went wrong!", Toast.LENGTH_SHORT).show();
                     }
                 });
             }
