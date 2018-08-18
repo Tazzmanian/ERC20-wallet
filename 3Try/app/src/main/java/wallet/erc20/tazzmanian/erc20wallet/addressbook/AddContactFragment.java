@@ -1,36 +1,24 @@
 package wallet.erc20.tazzmanian.erc20wallet.addressbook;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.ListView;
-import android.widget.TextView;
-
-import java.util.ArrayList;
 
 import wallet.erc20.tazzmanian.erc20wallet.R;
-import wallet.erc20.tazzmanian.erc20wallet.accounts.AccountItems;
-import wallet.erc20.tazzmanian.erc20wallet.accounts.AccountPopFragment;
-import wallet.erc20.tazzmanian.erc20wallet.accounts.AccountsFragment;
-import wallet.erc20.tazzmanian.erc20wallet.db.DBManager;
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link AddressBookFragment.OnFragmentInteractionListener} interface
+ * {@link AddContactFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link AddressBookFragment#newInstance} factory method to
+ * Use the {@link AddContactFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class AddressBookFragment extends Fragment {
+public class AddContactFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -42,7 +30,7 @@ public class AddressBookFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    public AddressBookFragment() {
+    public AddContactFragment() {
         // Required empty public constructor
     }
 
@@ -52,11 +40,11 @@ public class AddressBookFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment AddressBookFragment.
+     * @return A new instance of fragment AddContactFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static AddressBookFragment newInstance(String param1, String param2) {
-        AddressBookFragment fragment = new AddressBookFragment();
+    public static AddContactFragment newInstance(String param1, String param2) {
+        AddContactFragment fragment = new AddContactFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -77,7 +65,7 @@ public class AddressBookFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_address_book, container, false);
+        return inflater.inflate(R.layout.fragment_add_contact, container, false);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -117,67 +105,5 @@ public class AddressBookFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
-    }
-
-    private class ContactItemAdapter extends BaseAdapter {
-
-        public ArrayList<ContactItem> list;
-
-        public ContactItemAdapter(ArrayList<ContactItem> list) {
-            this.list = list;
-        }
-
-        @Override
-        public int getCount() {
-            return list.size();
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return null;
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            LayoutInflater inflater = getLayoutInflater();
-            View view = inflater.inflate(R.layout.layout_contract_ticket, null);
-
-            final ContactItem s = list.get(position);
-
-            TextView name = view.findViewById(R.id.contact_name);
-            name.setText(s.hash);
-
-            TextView hash = view.findViewById(R.id.contact_hash);
-            hash.setText(s.hash);
-
-            view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    /* Toast.makeText(getActivity(), s.hash, Toast.LENGTH_LONG).show(); */
-                    FragmentManager fm = getFragmentManager();
-                    final ContactPopFragment cpf = new ContactPopFragment();
-                    Bundle args = new Bundle();
-                    args.putLong("id", s.id);
-                    cpf.setArguments(args);
-                    cpf.show(fm, "Dialog");
-//                    cpf.setOnDismissListener(new DialogInterface.OnDismissListener(){
-//                        @Override
-//                        public void onDismiss(DialogInterface dialog) {
-//                            ListView listView = getActivity().findViewById(R.id.account_list_view);
-//                            accountAdapter = new AccountsFragment.AccountsItemAdapter(DBManager.am.getAll());
-//                            listView.setAdapter(accountAdapter);
-//                        }
-//                    });
-
-                }
-            });
-
-            return view;
-        }
     }
 }

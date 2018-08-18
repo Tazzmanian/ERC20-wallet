@@ -6,11 +6,12 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DBManager {
     static final String DBName = "ERC20Wallet";
-    static final int DBVersion = 10;
+    static final int DBVersion = 11;
     public static AccountManager am;
     public static TransactionsManager tm;
     public static ContractManager cm;
     public static ServerManager sm;
+    public static ContactManager abm;
     static SQLiteDatabase sqlDB;
 
     private static DBManager INSTANCE;
@@ -23,6 +24,7 @@ public class DBManager {
         tm = TransactionsManager.getInstance(sqlDB);
         cm = ContractManager.getInstance(sqlDB);
         sm = ServerManager.getInstance(sqlDB);
+        abm = ContactManager.getInstance(sqlDB);
     }
 
     public static DBManager getInstance(Context context) {
@@ -46,10 +48,12 @@ public class DBManager {
             tm = TransactionsManager.getInstance(db);
             cm = ContractManager.getInstance(db);
             sm = ServerManager.getInstance(db);
+            abm = ContactManager.getInstance(db);
             am.createTable();
             tm.createTable();
             cm.createTable();
             sm.createTable();
+            abm.createTable();
         }
 
         @Override
@@ -58,10 +62,12 @@ public class DBManager {
             tm = TransactionsManager.getInstance(db);
             cm = ContractManager.getInstance(db);
             sm = ServerManager.getInstance(db);
+            abm = ContactManager.getInstance(db);
             am.updateTable();
             tm.updateTable();
             cm.updateTable();
             sm.updateTable();
+            abm.updateTable();
             onCreate(db);
         }
     }
