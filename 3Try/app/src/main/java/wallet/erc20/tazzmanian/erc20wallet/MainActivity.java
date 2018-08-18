@@ -32,6 +32,7 @@ import wallet.erc20.tazzmanian.erc20wallet.addressbook.ContactPopFragment;
 import wallet.erc20.tazzmanian.erc20wallet.contracts.AddContractFragment;
 import wallet.erc20.tazzmanian.erc20wallet.contracts.ContractFragment;
 import wallet.erc20.tazzmanian.erc20wallet.contracts.ContractPopFragment;
+import wallet.erc20.tazzmanian.erc20wallet.send.SendFragment;
 import wallet.erc20.tazzmanian.erc20wallet.servers.AddServerFragment;
 import wallet.erc20.tazzmanian.erc20wallet.servers.ServerFragment;
 import wallet.erc20.tazzmanian.erc20wallet.servers.ServerPopFragment;
