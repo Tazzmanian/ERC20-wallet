@@ -7,9 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -18,19 +16,22 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import org.w3c.dom.Text;
-
-import java.util.ArrayList;
 import java.util.Stack;
+
+import wallet.erc20.tazzmanian.erc20wallet.accounts.AccountPopFragment;
+import wallet.erc20.tazzmanian.erc20wallet.accounts.AccountsFragment;
+import wallet.erc20.tazzmanian.erc20wallet.accounts.ExportPopFragment;
+import wallet.erc20.tazzmanian.erc20wallet.contracts.AddContractFragment;
+import wallet.erc20.tazzmanian.erc20wallet.contracts.ContractFragment;
+import wallet.erc20.tazzmanian.erc20wallet.servers.AddServerFragment;
+import wallet.erc20.tazzmanian.erc20wallet.servers.ServerFragment;
+import wallet.erc20.tazzmanian.erc20wallet.servers.ServerPopFragment;
+import wallet.erc20.tazzmanian.erc20wallet.transactions.TransactionsFragment;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
         TransactionsFragment.OnFragmentInteractionListener, SendFragment.OnFragmentInteractionListener,
@@ -38,7 +39,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         ContractFragment.OnFragmentInteractionListener, ServerFragment.OnFragmentInteractionListener,
         WelcomeFragment.OnFragmentInteractionListener, PasswordCreateFragment.OnFragmentInteractionListener,
         ImportSeedsFragment.OnFragmentInteractionListener, AccountPopFragment.OnFragmentInteractionListener,
-        AddServerFragment.OnFragmentInteractionListener, ServerPopFragment.OnFragmentInteractionListener {
+        AddServerFragment.OnFragmentInteractionListener, ServerPopFragment.OnFragmentInteractionListener,
+        AddContractFragment.OnFragmentInteractionListener, ExportPopFragment.OnFragmentInteractionListener
+{
 
     private TextView mTextMessage;
 

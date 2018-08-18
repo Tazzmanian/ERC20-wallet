@@ -1,4 +1,4 @@
-package wallet.erc20.tazzmanian.erc20wallet;
+package wallet.erc20.tazzmanian.erc20wallet.db;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -6,11 +6,11 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DBManager {
     static final String DBName = "ERC20Wallet";
-    static final int DBVersion = 8;
-    static AccountManager am;
-    static TransactionsManager tm;
-    static ContractManager cm;
-    static ServerManager sm;
+    static final int DBVersion = 10;
+    public static AccountManager am;
+    public static TransactionsManager tm;
+    public static ContractManager cm;
+    public static ServerManager sm;
     static SQLiteDatabase sqlDB;
 
     private static DBManager INSTANCE;

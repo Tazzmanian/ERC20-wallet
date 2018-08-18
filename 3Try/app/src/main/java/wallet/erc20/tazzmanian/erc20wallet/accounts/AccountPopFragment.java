@@ -1,4 +1,4 @@
-package wallet.erc20.tazzmanian.erc20wallet;
+package wallet.erc20.tazzmanian.erc20wallet.accounts;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -6,14 +6,29 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import wallet.erc20.tazzmanian.erc20wallet.R;
+import wallet.erc20.tazzmanian.erc20wallet.db.DBManager;
 
-public class ServerPopFragment extends DialogFragment {
+
+/**
+ * A simple {@link Fragment} subclass.
+ * Activities that contain this fragment must implement the
+ * {@link AccountPopFragment.OnFragmentInteractionListener} interface
+ * to handle interaction events.
+ * Use the {@link AccountPopFragment#newInstance} factory method to
+ * create an instance of this fragment.
+ */
+public class AccountPopFragment extends DialogFragment {
+    // TODO: Rename parameter arguments, choose names that match
+    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+    private static final String ARG_PARAM1 = "param1";
+    private static final String ARG_PARAM2 = "param2";
 
     private OnFragmentInteractionListener mListener;
     private DialogInterface.OnDismissListener onDismissListener;
@@ -22,12 +37,25 @@ public class ServerPopFragment extends DialogFragment {
         this.onDismissListener = onDismissListener;
     }
 
-    public ServerPopFragment() {
+    public AccountPopFragment() {
         // Required empty public constructor
     }
 
-    public static ServerPopFragment newInstance(String param1, String param2) {
-        ServerPopFragment fragment = new ServerPopFragment();
+    /**
+     * Use this factory method to create a new instance of
+     * this fragment using the provided parameters.
+     *
+     * @param param1 Parameter 1.
+     * @param param2 Parameter 2.
+     * @return A new instance of fragment AccountPopFragment.
+     */
+    // TODO: Rename and change types and number of parameters
+    public static AccountPopFragment newInstance(String param1, String param2) {
+        AccountPopFragment fragment = new AccountPopFragment();
+        Bundle args = new Bundle();
+        args.putString(ARG_PARAM1, param1);
+        args.putString(ARG_PARAM2, param2);
+        fragment.setArguments(args);
         return fragment;
     }
 
@@ -40,17 +68,16 @@ public class ServerPopFragment extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_server_pop, container, false);
+        View view = inflater.inflate(R.layout.fragment_account_pop, container, false);
 
         Button defaultBtn = view.findViewById(R.id.default_btn);
-        final Long id = getArguments().getLong("id");
+        final String hash = getArguments().getString("hash");
 
         defaultBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dismiss();
-                DBManager.sm.updateDefault(id);
-//                Utils.getInstance().buildConnection();
+                DBManager.am.updateDefault(hash);
             }
         });
 
@@ -59,29 +86,18 @@ public class ServerPopFragment extends DialogFragment {
             @Override
             public void onClick(View v) {
                 dismiss();
-                DBManager.sm.deleteAccount(id);
+                DBManager.am.deleteAccount(hash);
             }
         });
 
-        Button editBtn = view.findViewById(R.id.edit_btn);
-        editBtn.setOnClickListener(new View.OnClickListener() {
+        Button exportBtn = view.findViewById(R.id.export_btn);
+        exportBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dismiss();
-                FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
-                Fragment fr = new AddServerFragment();
-                ServerItems si = DBManager.sm.getItemById(id);
-                if(si != null) {
-                    Bundle bd = new Bundle();
-                    bd.putString("host", si.host);
-                    bd.putString("port", si.port);
-                    bd.putString("name", si.name);
-                    bd.putLong("id", si.id);
-                    fr.setArguments(bd);
-                }
-                fragmentTransaction.replace(R.id.main_frame_layout, fr);
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();
+                FragmentManager fm = getFragmentManager();
+                final ExportPopFragment epf = new ExportPopFragment();
+                epf.show(fm, "mnemonics");
             }
         });
 
@@ -113,6 +129,11 @@ public class ServerPopFragment extends DialogFragment {
     }
 
     @Override
+    public void onCancel(DialogInterface dialog) {
+        super.onCancel(dialog);
+    }
+
+    @Override
     public void onDismiss(DialogInterface dialog) {
         super.onDismiss(dialog);
 //        Toast.makeText(getActivity(), "test1", Toast.LENGTH_LONG).show();
@@ -121,6 +142,16 @@ public class ServerPopFragment extends DialogFragment {
         }
     }
 
+    /**
+     * This interface must be implemented by activities that contain this
+     * fragment to allow an interaction in this fragment to be communicated
+     * to the activity and potentially other fragments contained in that
+     * activity.
+     * <p>
+     * See the Android Training lesson <a href=
+     * "http://developer.android.com/training/basics/fragments/communicating.html"
+     * >Communicating with Other Fragments</a> for more information.
+     */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);

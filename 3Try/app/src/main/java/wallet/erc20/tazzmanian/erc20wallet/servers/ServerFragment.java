@@ -1,8 +1,7 @@
-package wallet.erc20.tazzmanian.erc20wallet;
+package wallet.erc20.tazzmanian.erc20wallet.servers;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -17,9 +16,11 @@ import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
+
+import wallet.erc20.tazzmanian.erc20wallet.R;
+import wallet.erc20.tazzmanian.erc20wallet.db.DBManager;
 
 
 public class ServerFragment extends Fragment {

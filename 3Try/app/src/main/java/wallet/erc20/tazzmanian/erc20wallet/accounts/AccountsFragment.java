@@ -1,4 +1,4 @@
-package wallet.erc20.tazzmanian.erc20wallet;
+package wallet.erc20.tazzmanian.erc20wallet.accounts;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -6,10 +6,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,9 +15,12 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
+
+import wallet.erc20.tazzmanian.erc20wallet.R;
+import wallet.erc20.tazzmanian.erc20wallet.WelcomeActivity;
+import wallet.erc20.tazzmanian.erc20wallet.db.DBManager;
 
 
 /**

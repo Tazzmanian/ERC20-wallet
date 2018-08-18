@@ -1,12 +1,12 @@
-package wallet.erc20.tazzmanian.erc20wallet;
+package wallet.erc20.tazzmanian.erc20wallet.db;
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 
 import java.util.ArrayList;
+
+import wallet.erc20.tazzmanian.erc20wallet.accounts.AccountItems;
 
 public class AccountManager {
 

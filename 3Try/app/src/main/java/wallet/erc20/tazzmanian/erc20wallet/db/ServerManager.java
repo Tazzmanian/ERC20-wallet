@@ -1,10 +1,12 @@
-package wallet.erc20.tazzmanian.erc20wallet;
+package wallet.erc20.tazzmanian.erc20wallet.db;
 
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
+
+import wallet.erc20.tazzmanian.erc20wallet.servers.ServerItems;
 
 public class ServerManager {
 
@@ -162,7 +164,7 @@ public class ServerManager {
     }
 
     public ServerItems getActive() {
-        Cursor cursor = db.rawQuery("Select * from " + TableName + " WHERE " +  ColumnID + " = 1;", null);
+        Cursor cursor = db.rawQuery("Select * from " + TableName + " WHERE " +  ColumnActive + " = 1;", null);
 
         if (cursor != null && cursor.moveToFirst()) {
             //get columns
