@@ -1,4 +1,4 @@
-package wallet.erc20.tazzmanian.erc20wallet.addressbook;
+package wallet.erc20.tazzmanian.erc20wallet.contracts;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -9,18 +9,20 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import wallet.erc20.tazzmanian.erc20wallet.R;
+import wallet.erc20.tazzmanian.erc20wallet.db.DBManager;
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link ContactPopFragment.OnFragmentInteractionListener} interface
+ * {@link ContractPopFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link ContactPopFragment#newInstance} factory method to
+ * Use the {@link ContractPopFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ContactPopFragment extends DialogFragment {
+public class ContractPopFragment extends DialogFragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -29,15 +31,15 @@ public class ContactPopFragment extends DialogFragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-
-    private OnFragmentInteractionListener mListener;
     private DialogInterface.OnDismissListener onDismissListener;
 
     public void setOnDismissListener(DialogInterface.OnDismissListener onDismissListener) {
         this.onDismissListener = onDismissListener;
     }
 
-    public ContactPopFragment() {
+    private OnFragmentInteractionListener mListener;
+
+    public ContractPopFragment() {
         // Required empty public constructor
     }
 
@@ -47,11 +49,11 @@ public class ContactPopFragment extends DialogFragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment ContactPopFragment.
+     * @return A new instance of fragment ContractPopFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static ContactPopFragment newInstance(String param1, String param2) {
-        ContactPopFragment fragment = new ContactPopFragment();
+    public static ContractPopFragment newInstance(String param1, String param2) {
+        ContractPopFragment fragment = new ContractPopFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -72,7 +74,20 @@ public class ContactPopFragment extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_contact_pop, container, false);
+        View view = inflater.inflate(R.layout.fragment_contract_pop, container, false);
+
+        final Long id = getArguments().getLong("id");
+
+        Button deleteBtn = view.findViewById(R.id.delete_btn);
+        deleteBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DBManager.cm.delete(id);
+                dismiss();
+            }
+        });
+
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -112,5 +127,14 @@ public class ContactPopFragment extends DialogFragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        super.onDismiss(dialog);
+//        Toast.makeText(getActivity(), "test1", Toast.LENGTH_LONG).show();
+        if (onDismissListener != null) {
+            onDismissListener.onDismiss(dialog);
+        }
     }
 }

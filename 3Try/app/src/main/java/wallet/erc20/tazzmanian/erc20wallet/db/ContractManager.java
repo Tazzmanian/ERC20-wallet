@@ -104,4 +104,8 @@ public class ContractManager {
 
         return list;
     }
+
+    public void delete(Long id) {
+        db.delete(TableName,ColumnID + " = ?", new String[] {id.toString()});
+    }
 }

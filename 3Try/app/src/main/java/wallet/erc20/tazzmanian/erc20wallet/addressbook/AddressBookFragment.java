@@ -192,18 +192,18 @@ public class AddressBookFragment extends Fragment {
                     /* Toast.makeText(getActivity(), s.hash, Toast.LENGTH_LONG).show(); */
                     FragmentManager fm = getFragmentManager();
                     final ContactPopFragment cpf = new ContactPopFragment();
-//                    Bundle args = new Bundle();
-//                    args.putLong("id", s.id);
-//                    cpf.setArguments(args);
-//                    cpf.show(fm, "Dialog");
-//                    cpf.setOnDismissListener(new DialogInterface.OnDismissListener(){
-//                        @Override
-//                        public void onDismiss(DialogInterface dialog) {
-//                            ListView listView = getActivity().findViewById(R.id.account_list_view);
-//                            accountAdapter = new AccountsFragment.AccountsItemAdapter(DBManager.am.getAll());
-//                            listView.setAdapter(accountAdapter);
-//                        }
-//                    });
+                    Bundle args = new Bundle();
+                    args.putLong("id", s.id);
+                    cpf.setArguments(args);
+                    cpf.show(fm, "Dialog");
+                    cpf.setOnDismissListener(new DialogInterface.OnDismissListener(){
+                        @Override
+                        public void onDismiss(DialogInterface dialog) {
+                            ListView listView = getActivity().findViewById(R.id.contact_list_view);
+                            contactItemAdapter = new ContactItemAdapter(DBManager.abm.getAll());
+                            listView.setAdapter(contactItemAdapter);
+                        }
+                    });
 
                 }
             });

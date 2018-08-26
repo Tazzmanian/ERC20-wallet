@@ -86,7 +86,6 @@ public class ContractFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_contract, container, false);
 
-
         FloatingActionButton fab = view.findViewById(R.id.fab_add_contract);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -184,27 +183,33 @@ public class ContractFragment extends Fragment {
             TextView hash = view.findViewById(R.id.hash);
             hash.setText(s.addressHash);
 
-//            view.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    /* Toast.makeText(getActivity(), s.hash, Toast.LENGTH_LONG).show(); */
-//                    FragmentManager fm = getFragmentManager();
-//                    final AccountPopFragment apf = new AccountPopFragment();
-//                    Bundle args = new Bundle();
-//                    args.putString("hash", s.hash);
-//                    apf.setArguments(args);
-//                    apf.show(fm, "Dialog");
-//                    apf.setOnDismissListener(new DialogInterface.OnDismissListener(){
-//                        @Override
-//                        public void onDismiss(DialogInterface dialog) {
-//                            ListView listView = getActivity().findViewById(R.id.account_list_view);
-//                            accountAdapter = new AccountsFragment.AccountsItemAdapter(DBManager.am.getAll());
-//                            listView.setAdapter(accountAdapter);
-//                        }
-//                    });
-//
-//                }
-//            });
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    /* Toast.makeText(getActivity(), s.hash, Toast.LENGTH_LONG).show(); */
+                    FragmentManager fm = getFragmentManager();
+                    final ContractPopFragment apf = new ContractPopFragment();
+                    Bundle args = new Bundle();
+                    args.putLong("id", s.id);
+                    apf.setArguments(args);
+                    apf.show(fm, "Dialog");
+                    apf.setOnDismissListener(new DialogInterface.OnDismissListener(){
+                        @Override
+                        public void onDismiss(DialogInterface dialog) {
+                            ListView listView = getActivity().findViewById(R.id.contracts_list_view);
+                            itemAdapter = new ContractItemAdapter(DBManager.cm.getAll());
+                            listView.setAdapter(itemAdapter);
+
+                            getActivity().runOnUiThread(new Runnable() {
+                                public void run() {
+                                    itemAdapter.notifyDataSetChanged();
+                                }
+                            });
+                        }
+                    });
+
+                }
+            });
 
             return view;
         }

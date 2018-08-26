@@ -148,9 +148,9 @@ public class AddContractFragment extends Fragment {
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                         Log.d("create", "account succeded");
                         try {
-                            Toast.makeText(view.getContext(), response.getString("symbol")
-                                    + " " + response.getString("name") + " " + response.getString("totalSupply") + " "
-                                    + response.getString("decimals"), Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(view.getContext(), response.getString("symbol")
+//                                    + " " + response.getString("name") + " " + response.getString("totalSupply") + " "
+//                                    + response.getString("decimals"), Toast.LENGTH_SHORT).show();
 
                             DBManager.cm.insert(hash.getText().toString(), response.getString("name"), response.getString("symbol"),
                                     response.getString("totalSupply"), response.getString("decimals"));
