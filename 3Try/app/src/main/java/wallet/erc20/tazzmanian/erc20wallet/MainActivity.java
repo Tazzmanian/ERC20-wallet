@@ -26,6 +26,7 @@ import java.util.Stack;
 import wallet.erc20.tazzmanian.erc20wallet.accounts.AccountPopFragment;
 import wallet.erc20.tazzmanian.erc20wallet.accounts.AccountsFragment;
 import wallet.erc20.tazzmanian.erc20wallet.accounts.ExportPopFragment;
+import wallet.erc20.tazzmanian.erc20wallet.addressbook.AddContactFragment;
 import wallet.erc20.tazzmanian.erc20wallet.addressbook.AddressBookFragment;
 import wallet.erc20.tazzmanian.erc20wallet.contracts.AddContractFragment;
 import wallet.erc20.tazzmanian.erc20wallet.contracts.ContractFragment;
@@ -42,7 +43,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         ImportSeedsFragment.OnFragmentInteractionListener, AccountPopFragment.OnFragmentInteractionListener,
         AddServerFragment.OnFragmentInteractionListener, ServerPopFragment.OnFragmentInteractionListener,
         AddContractFragment.OnFragmentInteractionListener, ExportPopFragment.OnFragmentInteractionListener,
-        AddressBookFragment.OnFragmentInteractionListener
+        AddressBookFragment.OnFragmentInteractionListener, AddContactFragment.OnFragmentInteractionListener
 {
 
     private TextView mTextMessage;

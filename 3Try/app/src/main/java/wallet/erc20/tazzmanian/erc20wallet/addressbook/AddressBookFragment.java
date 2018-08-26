@@ -2,10 +2,13 @@ package wallet.erc20.tazzmanian.erc20wallet.addressbook;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,10 +20,14 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import wallet.erc20.tazzmanian.erc20wallet.R;
+import wallet.erc20.tazzmanian.erc20wallet.WelcomeActivity;
 import wallet.erc20.tazzmanian.erc20wallet.accounts.AccountItems;
 import wallet.erc20.tazzmanian.erc20wallet.accounts.AccountPopFragment;
 import wallet.erc20.tazzmanian.erc20wallet.accounts.AccountsFragment;
+import wallet.erc20.tazzmanian.erc20wallet.contracts.AddContractFragment;
+import wallet.erc20.tazzmanian.erc20wallet.contracts.ContractFragment;
 import wallet.erc20.tazzmanian.erc20wallet.db.DBManager;
+import wallet.erc20.tazzmanian.erc20wallet.servers.ServerFragment;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -35,6 +42,8 @@ public class AddressBookFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+
+    private ContactItemAdapter contactItemAdapter;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -77,7 +86,25 @@ public class AddressBookFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_address_book, container, false);
+        View view = inflater.inflate(R.layout.fragment_address_book, container, false);
+
+        ListView listView = view.findViewById(R.id.contact_list_view);
+        contactItemAdapter = new ContactItemAdapter(DBManager.abm.getAll());
+        listView.setAdapter(contactItemAdapter);
+
+        FloatingActionButton fab = view.findViewById(R.id.fab_add_contact);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+                AddContactFragment acf = new AddContactFragment();
+                fragmentTransaction.replace(R.id.main_frame_layout, acf);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+            }
+        });
+
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -145,12 +172,16 @@ public class AddressBookFragment extends Fragment {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             LayoutInflater inflater = getLayoutInflater();
-            View view = inflater.inflate(R.layout.layout_contract_ticket, null);
+            View view = inflater.inflate(R.layout.layout_contact_ticket, null);
 
             final ContactItem s = list.get(position);
 
+            if (s == null) {
+                return view;
+            }
+
             TextView name = view.findViewById(R.id.contact_name);
-            name.setText(s.hash);
+            name.setText(s.name);
 
             TextView hash = view.findViewById(R.id.contact_hash);
             hash.setText(s.hash);
@@ -161,10 +192,10 @@ public class AddressBookFragment extends Fragment {
                     /* Toast.makeText(getActivity(), s.hash, Toast.LENGTH_LONG).show(); */
                     FragmentManager fm = getFragmentManager();
                     final ContactPopFragment cpf = new ContactPopFragment();
-                    Bundle args = new Bundle();
-                    args.putLong("id", s.id);
-                    cpf.setArguments(args);
-                    cpf.show(fm, "Dialog");
+//                    Bundle args = new Bundle();
+//                    args.putLong("id", s.id);
+//                    cpf.setArguments(args);
+//                    cpf.show(fm, "Dialog");
 //                    cpf.setOnDismissListener(new DialogInterface.OnDismissListener(){
 //                        @Override
 //                        public void onDismiss(DialogInterface dialog) {

@@ -4,11 +4,20 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import wallet.erc20.tazzmanian.erc20wallet.R;
+import wallet.erc20.tazzmanian.erc20wallet.db.DBManager;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -29,6 +38,38 @@ public class AddContactFragment extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+
+    private EditText name, hash;
+    private Button b;
+    private View view;
+
+    //  create a textWatcher member
+    private TextWatcher mTextWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+            // check Fields For Empty Values
+            checkFieldsForEmptyValues();
+        }
+    };
+
+    void checkFieldsForEmptyValues(){
+        String n = name.getText().toString();
+        String h = hash.getText().toString();
+
+        if(!n.equals("") && (h.length() == 42 && h.startsWith("0x"))){
+            b.setEnabled(true);
+        } else {
+            b.setEnabled(false);
+        }
+    }
 
     public AddContactFragment() {
         // Required empty public constructor
@@ -65,7 +106,28 @@ public class AddContactFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_add_contact, container, false);
+        view = inflater.inflate(R.layout.fragment_add_contact, container, false);
+
+        name = (EditText) view.findViewById(R.id.name);
+        hash = (EditText) view.findViewById(R.id.hash);
+        b = view.findViewById(R.id.add);
+
+        hash.addTextChangedListener(mTextWatcher);
+
+        b.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DBManager.abm.insert(name.getText().toString(), hash.getText().toString());
+
+                FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+                AddressBookFragment acf = new AddressBookFragment();
+                fragmentTransaction.replace(R.id.main_frame_layout, acf);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+            }
+        });
+
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
