@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import wallet.erc20.tazzmanian.erc20wallet.accounts.AccountItems;
 import wallet.erc20.tazzmanian.erc20wallet.addressbook.ContactItem;
+import wallet.erc20.tazzmanian.erc20wallet.servers.ServerItems;
 
 public class ContactManager {
 
@@ -108,5 +109,32 @@ public class ContactManager {
         values.put(ColumnHash, hash);
         values.put(ColumnName, name);
         db.update(TableName, values, ColumnID + " = ?", new String[]{id.toString()});
+    }
+
+    public void delete(Long id) {
+        db.delete(TableName,ColumnID + " = ?", new String[] {id.toString()});
+    }
+
+    public ContactItem getItemById(Long id) {
+        Cursor cursor = db.rawQuery("Select * from " + TableName + ";", null);
+
+        if (cursor != null && cursor.moveToFirst()) {
+            //get columns
+            int cid = cursor.getColumnIndex
+                    (ColumnID);
+            int cname = cursor.getColumnIndex
+                    (ColumnName);
+            int chash = cursor.getColumnIndex
+                    (ColumnHash);
+
+            String thisName = cursor.getString(cname);
+            String thisHash = cursor.getString(chash);
+
+            cursor.close();
+
+            return new ContactItem(id, thisHash, thisName);
+        }
+
+        return null;
     }
 }

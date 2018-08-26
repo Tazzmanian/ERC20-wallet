@@ -6,11 +6,17 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import wallet.erc20.tazzmanian.erc20wallet.R;
+import wallet.erc20.tazzmanian.erc20wallet.accounts.ExportPopFragment;
+import wallet.erc20.tazzmanian.erc20wallet.db.DBManager;
+import wallet.erc20.tazzmanian.erc20wallet.servers.ServerItems;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -72,7 +78,41 @@ public class ContactPopFragment extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_contact_pop, container, false);
+        View view = inflater.inflate(R.layout.fragment_contact_pop, container, false);
+
+        final Long id = getArguments().getLong("id");
+
+        Button deleteBtn = view.findViewById(R.id.delete_btn);
+        deleteBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DBManager.abm.delete(id);
+                dismiss();
+            }
+        });
+
+        Button editBtn = view.findViewById(R.id.edit_btn);
+        editBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+                FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+                AddContactFragment acf = new AddContactFragment();
+                ContactItem ci = DBManager.abm.getItemById(id);
+                if(ci != null) {
+                    Bundle bd = new Bundle();
+                    bd.putString("hash", ci.hash);
+                    bd.putString("name", ci.name);
+                    bd.putLong("id", ci.id);
+                    acf.setArguments(bd);
+                }
+                fragmentTransaction.replace(R.id.main_frame_layout, acf);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+            }
+        });
+
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -112,5 +152,14 @@ public class ContactPopFragment extends DialogFragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        super.onDismiss(dialog);
+//        Toast.makeText(getActivity(), "test1", Toast.LENGTH_LONG).show();
+        if (onDismissListener != null) {
+            onDismissListener.onDismiss(dialog);
+        }
     }
 }

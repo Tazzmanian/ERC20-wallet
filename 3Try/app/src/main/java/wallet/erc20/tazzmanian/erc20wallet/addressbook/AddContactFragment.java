@@ -127,6 +127,16 @@ public class AddContactFragment extends Fragment {
             }
         });
 
+        if(getArguments() != null) {
+            TextView tv = view.findViewById(R.id.title_id);
+            tv.setText(R.string.edit_server_title);
+            b.setText(R.string.update_btn);
+            b.setEnabled(true);
+            name.setText(getArguments().getString("name"));
+            port.setText(getArguments().getString("port"));
+            host.setText(getArguments().getString("host"));
+        }
+
         return view;
     }
 
