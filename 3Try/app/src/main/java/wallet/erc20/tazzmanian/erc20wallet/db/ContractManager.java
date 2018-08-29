@@ -88,10 +88,13 @@ public class ContractManager {
             do {
                 long thisId = cursor.getLong(id);
                 String thisDecimals = cursor.getString(decimals);
-                String thisName = cursor.getString(name);
+                String thisName = cursor.getString(name).equals("null") ? "NA" : cursor.getString(name);
                 String thisHash = cursor.getString(hash);
-                String thisSymbol = cursor.getString(symbol);
+                String thisSymbol = cursor.getString(symbol).equals("null") ? "NA" : cursor.getString(symbol);
                 String thisTotalSypply = cursor.getString(totalSupply);
+
+                thisTotalSypply = thisTotalSypply.equals("null") ? "0" : thisTotalSypply;
+                thisDecimals = thisDecimals.equals("null") ? "0" : thisDecimals;
 
                 list.add(new ContractItems(thisHash, thisId, thisSymbol, thisName, new BigInteger(thisTotalSypply), new BigInteger(thisDecimals)));
             }
@@ -100,5 +103,9 @@ public class ContractManager {
         }
 
         return list;
+    }
+
+    public void delete(Long id) {
+        db.delete(TableName,ColumnID + " = ?", new String[] {id.toString()});
     }
 }

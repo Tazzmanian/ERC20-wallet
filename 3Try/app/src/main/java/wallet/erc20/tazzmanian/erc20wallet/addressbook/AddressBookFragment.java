@@ -1,7 +1,8 @@
-package wallet.erc20.tazzmanian.erc20wallet.contracts;
+package wallet.erc20.tazzmanian.erc20wallet.addressbook;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -19,29 +20,30 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import wallet.erc20.tazzmanian.erc20wallet.R;
+import wallet.erc20.tazzmanian.erc20wallet.WelcomeActivity;
 import wallet.erc20.tazzmanian.erc20wallet.accounts.AccountItems;
 import wallet.erc20.tazzmanian.erc20wallet.accounts.AccountPopFragment;
 import wallet.erc20.tazzmanian.erc20wallet.accounts.AccountsFragment;
+import wallet.erc20.tazzmanian.erc20wallet.contracts.AddContractFragment;
+import wallet.erc20.tazzmanian.erc20wallet.contracts.ContractFragment;
 import wallet.erc20.tazzmanian.erc20wallet.db.DBManager;
-import wallet.erc20.tazzmanian.erc20wallet.servers.AddServerFragment;
 import wallet.erc20.tazzmanian.erc20wallet.servers.ServerFragment;
-
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link ContractFragment.OnFragmentInteractionListener} interface
+ * {@link AddressBookFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link ContractFragment#newInstance} factory method to
+ * Use the {@link AddressBookFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ContractFragment extends Fragment {
+public class AddressBookFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    private ContractItemAdapter itemAdapter;
+    private ContactItemAdapter contactItemAdapter;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -49,7 +51,7 @@ public class ContractFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    public ContractFragment() {
+    public AddressBookFragment() {
         // Required empty public constructor
     }
 
@@ -59,11 +61,11 @@ public class ContractFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment ContractFragment.
+     * @return A new instance of fragment AddressBookFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static ContractFragment newInstance(String param1, String param2) {
-        ContractFragment fragment = new ContractFragment();
+    public static AddressBookFragment newInstance(String param1, String param2) {
+        AddressBookFragment fragment = new AddressBookFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -84,23 +86,23 @@ public class ContractFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_contract, container, false);
+        View view = inflater.inflate(R.layout.fragment_address_book, container, false);
 
-        FloatingActionButton fab = view.findViewById(R.id.fab_add_contract);
+        ListView listView = view.findViewById(R.id.contact_list_view);
+        contactItemAdapter = new ContactItemAdapter(DBManager.abm.getAll());
+        listView.setAdapter(contactItemAdapter);
+
+        FloatingActionButton fab = view.findViewById(R.id.fab_add_contact);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
-                AddContractFragment acf = new AddContractFragment();
+                AddContactFragment acf = new AddContactFragment();
                 fragmentTransaction.replace(R.id.main_frame_layout, acf);
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
             }
         });
-
-        ListView listView = view.findViewById(R.id.contracts_list_view);
-        itemAdapter = new ContractItemAdapter(DBManager.cm.getAll());
-        listView.setAdapter(itemAdapter);
 
         return view;
     }
@@ -144,11 +146,11 @@ public class ContractFragment extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
-    private class ContractItemAdapter extends BaseAdapter {
+    private class ContactItemAdapter extends BaseAdapter {
 
-        public ArrayList<ContractItems> list;
+        public ArrayList<ContactItem> list;
 
-        public ContractItemAdapter(ArrayList<ContractItems> list) {
+        public ContactItemAdapter(ArrayList<ContactItem> list) {
             this.list = list;
         }
 
@@ -170,41 +172,36 @@ public class ContractFragment extends Fragment {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             LayoutInflater inflater = getLayoutInflater();
-            View view = inflater.inflate(R.layout.layout_contract_ticket, null);
+            View view = inflater.inflate(R.layout.layout_contact_ticket, null);
 
-            final ContractItems s = list.get(position);
+            final ContactItem s = list.get(position);
 
-            TextView name = view.findViewById(R.id.name);
+            if (s == null) {
+                return view;
+            }
+
+            TextView name = view.findViewById(R.id.contact_name);
             name.setText(s.name);
 
-            TextView symbol = view.findViewById(R.id.symbol);
-            symbol.setText(s.symbol);
-
-            TextView hash = view.findViewById(R.id.hash);
-            hash.setText(s.addressHash);
+            TextView hash = view.findViewById(R.id.contact_hash);
+            hash.setText(s.hash);
 
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     /* Toast.makeText(getActivity(), s.hash, Toast.LENGTH_LONG).show(); */
                     FragmentManager fm = getFragmentManager();
-                    final ContractPopFragment apf = new ContractPopFragment();
+                    final ContactPopFragment cpf = new ContactPopFragment();
                     Bundle args = new Bundle();
                     args.putLong("id", s.id);
-                    apf.setArguments(args);
-                    apf.show(fm, "Dialog");
-                    apf.setOnDismissListener(new DialogInterface.OnDismissListener(){
+                    cpf.setArguments(args);
+                    cpf.show(fm, "Dialog");
+                    cpf.setOnDismissListener(new DialogInterface.OnDismissListener(){
                         @Override
                         public void onDismiss(DialogInterface dialog) {
-                            ListView listView = getActivity().findViewById(R.id.contracts_list_view);
-                            itemAdapter = new ContractItemAdapter(DBManager.cm.getAll());
-                            listView.setAdapter(itemAdapter);
-
-                            getActivity().runOnUiThread(new Runnable() {
-                                public void run() {
-                                    itemAdapter.notifyDataSetChanged();
-                                }
-                            });
+                            ListView listView = getActivity().findViewById(R.id.contact_list_view);
+                            contactItemAdapter = new ContactItemAdapter(DBManager.abm.getAll());
+                            listView.setAdapter(contactItemAdapter);
                         }
                     });
 

@@ -1,55 +1,37 @@
-package wallet.erc20.tazzmanian.erc20wallet.contracts;
+package wallet.erc20.tazzmanian.erc20wallet.addressbook;
 
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.JsonHttpResponseHandler;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.UnsupportedEncodingException;
-
-import cz.msebera.android.httpclient.Header;
-import cz.msebera.android.httpclient.entity.StringEntity;
-import cz.msebera.android.httpclient.message.BasicHeader;
-import cz.msebera.android.httpclient.protocol.HTTP;
-import wallet.erc20.tazzmanian.erc20wallet.MainActivity;
 import wallet.erc20.tazzmanian.erc20wallet.R;
 import wallet.erc20.tazzmanian.erc20wallet.db.DBManager;
-
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link AddContractFragment.OnFragmentInteractionListener} interface
+ * {@link AddContactFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link AddContractFragment#newInstance} factory method to
+ * Use the {@link AddContactFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class AddContractFragment extends Fragment {
+public class AddContactFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
-    private EditText hash;
-    private Button b;
-    private View view;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -57,6 +39,11 @@ public class AddContractFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
+    private EditText name, hash;
+    private Button b;
+    private View view;
+
+    //  create a textWatcher member
     private TextWatcher mTextWatcher = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
@@ -74,16 +61,17 @@ public class AddContractFragment extends Fragment {
     };
 
     void checkFieldsForEmptyValues(){
+        String n = name.getText().toString();
         String h = hash.getText().toString();
 
-        if(h.isEmpty()){
-            b.setEnabled(false);
-        } else {
+        if(!n.equals("") && (h.length() == 42 && h.startsWith("0x"))){
             b.setEnabled(true);
+        } else {
+            b.setEnabled(false);
         }
     }
 
-    public AddContractFragment() {
+    public AddContactFragment() {
         // Required empty public constructor
     }
 
@@ -93,11 +81,11 @@ public class AddContractFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment AddContractFragment.
+     * @return A new instance of fragment AddContactFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static AddContractFragment newInstance(String param1, String param2) {
-        AddContractFragment fragment = new AddContractFragment();
+    public static AddContactFragment newInstance(String param1, String param2) {
+        AddContactFragment fragment = new AddContactFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -118,57 +106,45 @@ public class AddContractFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        view =  inflater.inflate(R.layout.fragment_add_contract, container, false);
+        view = inflater.inflate(R.layout.fragment_add_contact, container, false);
 
-        hash = view.findViewById(R.id.hash);
-        hash.addTextChangedListener(mTextWatcher);
-
+        name = (EditText) view.findViewById(R.id.name);
+        hash = (EditText) view.findViewById(R.id.hash);
         b = view.findViewById(R.id.add);
+
+        hash.addTextChangedListener(mTextWatcher);
 
         b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AsyncHttpClient client = new AsyncHttpClient();
-                JSONObject jsonParams = new JSONObject();
-                StringEntity entity = null;
-                try {
-                    jsonParams.put("contractAddress", hash.getText().toString());
-                    jsonParams.put("network", DBManager.sm.getActive().toString());
-                    jsonParams.put("publicAddress", DBManager.am.getActiveHashAccount());
-                    entity = new StringEntity(jsonParams.toString());
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                } catch (JSONException e) {
-                    e.printStackTrace();
+
+                if(getArguments() == null) {
+                    DBManager.abm.insert(name.getText().toString(), hash.getText().toString());
+                } else {
+                    long id = getArguments().getLong("id");
+                    if(id > 0) {
+                        DBManager.abm.update(name.getText().toString(), hash.getText().toString(), id);
+                    }
                 }
-                entity.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
 
-                client.post(getActivity(), "http://10.0.2.2:5000/contracts/load", entity, "application/json", new JsonHttpResponseHandler() {
-                    @Override
-                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                        Log.d("create", "account succeded");
-                        try {
-//                            Toast.makeText(view.getContext(), response.getString("symbol")
-//                                    + " " + response.getString("name") + " " + response.getString("totalSupply") + " "
-//                                    + response.getString("decimals"), Toast.LENGTH_SHORT).show();
-
-                            DBManager.cm.insert(hash.getText().toString(), response.getString("name"), response.getString("symbol"),
-                                    response.getString("totalSupply"), response.getString("decimals"));
-
-                            FragmentManager fm = getActivity().getSupportFragmentManager();
-                            fm.popBackStack();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                        Toast.makeText(view.getContext(), "Something went wrong!", Toast.LENGTH_SHORT).show();
-                    }
-                });
+                FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+                AddressBookFragment acf = new AddressBookFragment();
+                fragmentTransaction.replace(R.id.main_frame_layout, acf);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
             }
         });
+
+        if(getArguments() != null) {
+            TextView tv = view.findViewById(R.id.title_id);
+            tv.setText(R.string.edit_server_title);
+            b.setText(R.string.update_btn);
+            b.setEnabled(true);
+            name.setText(getArguments().getString("name"));
+            hash.setText(getArguments().getString("hash"));
+            hash.setEnabled(false);
+        }
+
         return view;
     }
 

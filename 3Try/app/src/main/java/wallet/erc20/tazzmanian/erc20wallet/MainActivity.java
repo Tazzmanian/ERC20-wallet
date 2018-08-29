@@ -26,8 +26,12 @@ import java.util.Stack;
 import wallet.erc20.tazzmanian.erc20wallet.accounts.AccountPopFragment;
 import wallet.erc20.tazzmanian.erc20wallet.accounts.AccountsFragment;
 import wallet.erc20.tazzmanian.erc20wallet.accounts.ExportPopFragment;
+import wallet.erc20.tazzmanian.erc20wallet.addressbook.AddContactFragment;
+import wallet.erc20.tazzmanian.erc20wallet.addressbook.AddressBookFragment;
+import wallet.erc20.tazzmanian.erc20wallet.addressbook.ContactPopFragment;
 import wallet.erc20.tazzmanian.erc20wallet.contracts.AddContractFragment;
 import wallet.erc20.tazzmanian.erc20wallet.contracts.ContractFragment;
+import wallet.erc20.tazzmanian.erc20wallet.contracts.ContractPopFragment;
 import wallet.erc20.tazzmanian.erc20wallet.servers.AddServerFragment;
 import wallet.erc20.tazzmanian.erc20wallet.servers.ServerFragment;
 import wallet.erc20.tazzmanian.erc20wallet.servers.ServerPopFragment;
@@ -40,7 +44,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         WelcomeFragment.OnFragmentInteractionListener, PasswordCreateFragment.OnFragmentInteractionListener,
         ImportSeedsFragment.OnFragmentInteractionListener, AccountPopFragment.OnFragmentInteractionListener,
         AddServerFragment.OnFragmentInteractionListener, ServerPopFragment.OnFragmentInteractionListener,
-        AddContractFragment.OnFragmentInteractionListener, ExportPopFragment.OnFragmentInteractionListener
+        AddContractFragment.OnFragmentInteractionListener, ExportPopFragment.OnFragmentInteractionListener,
+        AddressBookFragment.OnFragmentInteractionListener, AddContactFragment.OnFragmentInteractionListener,
+        ContactPopFragment.OnFragmentInteractionListener, ContractPopFragment.OnFragmentInteractionListener
 {
 
     private TextView mTextMessage;
@@ -179,6 +185,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_server:
                 loadFragment(new ServerFragment());
                 loadBottomNavigation(R.id.nav_server, R.menu.server_manage_menu);
+                flag = true;
+                break;
+            case R.id.nav_address_book:
+                loadFragment(new AddressBookFragment());
+                loadBottomNavigation(R.id.nav_server, R.menu.address_book_manage_menu);
                 flag = true;
                 break;
         }
