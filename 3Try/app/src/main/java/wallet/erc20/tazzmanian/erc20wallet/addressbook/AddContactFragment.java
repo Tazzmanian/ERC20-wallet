@@ -117,7 +117,15 @@ public class AddContactFragment extends Fragment {
         b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DBManager.abm.insert(name.getText().toString(), hash.getText().toString());
+
+                if(getArguments() == null) {
+                    DBManager.abm.insert(name.getText().toString(), hash.getText().toString());
+                } else {
+                    long id = getArguments().getLong("id");
+                    if(id > 0) {
+                        DBManager.abm.update(name.getText().toString(), hash.getText().toString(), id);
+                    }
+                }
 
                 FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
                 AddressBookFragment acf = new AddressBookFragment();
@@ -133,8 +141,8 @@ public class AddContactFragment extends Fragment {
             b.setText(R.string.update_btn);
             b.setEnabled(true);
             name.setText(getArguments().getString("name"));
-            port.setText(getArguments().getString("port"));
-            host.setText(getArguments().getString("host"));
+            hash.setText(getArguments().getString("hash"));
+            hash.setEnabled(false);
         }
 
         return view;
