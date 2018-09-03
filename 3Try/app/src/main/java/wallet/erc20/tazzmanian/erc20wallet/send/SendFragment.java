@@ -7,8 +7,18 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
+import android.widget.EditText;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import wallet.erc20.tazzmanian.erc20wallet.R;
+import wallet.erc20.tazzmanian.erc20wallet.addressbook.ContactItem;
+import wallet.erc20.tazzmanian.erc20wallet.contracts.ContractItems;
+import wallet.erc20.tazzmanian.erc20wallet.db.DBManager;
 
 
 /**
@@ -28,6 +38,7 @@ public class SendFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private View view;
 
     private OnFragmentInteractionListener mListener;
 
@@ -66,7 +77,44 @@ public class SendFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_send, container, false);
+        view = inflater.inflate(R.layout.fragment_send, container, false);
+
+        EditText from = (EditText) view.findViewById(R.id.from_tx);
+        from.setText(DBManager.am.getActiveHashAccount());
+
+        AutoCompleteTextView to = (AutoCompleteTextView) view.findViewById(R.id.to_tx);
+        // Get the string array
+        ArrayList<String> accounts = new ArrayList<>();
+        ArrayList<ContactItem> accs = DBManager.abm.getAll();
+
+        for (int i = 0; i < accs.size(); i++) {
+            ContactItem ci = accs.get(i);
+            accounts.add(ci.hash);
+        }
+
+        // Create the adapter and set it to the AutoCompleteTextView
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.select_dialog_item, accounts);
+        to.setAdapter(adapter);
+        to.setThreshold(0);
+
+        /////////
+        AutoCompleteTextView contract = (AutoCompleteTextView) view.findViewById(R.id.contract_tx);
+        // Get the string array
+        ArrayList<String> contracts = new ArrayList<>();
+        ArrayList<ContractItems> cons = DBManager.cm.getAll();
+
+        for (int i = 0; i < cons.size(); i++) {
+            ContractItems ci = cons.get(i);
+            contracts.add(ci.addressHash);
+        }
+
+        // Create the adapter and set it to the AutoCompleteTextView
+        ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(getContext(), android.R.layout.select_dialog_item, contracts);
+        contract.setAdapter(adapter2);
+        contract.setThreshold(0);
+
+
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
