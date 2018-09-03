@@ -25,7 +25,7 @@ public class SendController {
     }
     
     @PostMapping(value = "/send")
-    public void send(@RequestBody SendDTO dto) {
-        sendService.send(dto);
+    public TransactionReceipt send(@RequestBody SendDTO dto) {
+        return sendService.send(dto);
     }
 }

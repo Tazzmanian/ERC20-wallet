@@ -36,38 +36,42 @@ import org.web3j.utils.Convert;
 @Service
 public class SendService {
 
-    public void send(SendDTO dto) {
+    public TransactionReceipt send(SendDTO dto) {
         if (dto.getContractAddress().isEmpty()) {
-            sendEther(dto);
+            return sendEther(dto);
         } else {
-            sendToken(dto);
+            return sendToken(dto);
         }
     }
 
-    private void sendEther(SendDTO dto) {
+    private TransactionReceipt sendEther(SendDTO dto) {
         Credentials cred = WalletUtils.loadBip39Credentials(dto.getPassword(), dto.getMnemonics());
         Web3j web3 = Web3j.build(new HttpService(dto.getNetwork()));
 
         try{
-            Transfer.sendFunds(
+            return Transfer.sendFunds(
             web3, cred, dto.getTo(),
             dto.getEthers(), Convert.Unit.ETHER)
-            .sendAsync();            
+            .send();            
         } catch(Exception e) {
             log.info("Send funds " + e.getMessage());
         }
+        
+        return null;
     }
 
-    private void sendToken(SendDTO dto) {
+    private TransactionReceipt sendToken(SendDTO dto) {
         try {
             Credentials cred = WalletUtils.loadBip39Credentials(dto.getPassword(), dto.getMnemonics());
             Web3j web3 = Web3j.build(new HttpService(dto.getNetwork()));
 
             ERC20Wrapper contract = ERC20Wrapper.load(dto.getContractAddress(), web3, cred, DefaultGasProvider.GAS_PRICE, DefaultGasProvider.GAS_LIMIT);
                       
-            contract.transfer(dto.getTo(), dto.getTokens()).send();
+            return contract.transfer(dto.getTo(), dto.getTokens()).send();
         } catch (Exception ex) {
             log.info("Send tokens ", ex.getMessage());
         }
+        
+        return null;
     }
 }
