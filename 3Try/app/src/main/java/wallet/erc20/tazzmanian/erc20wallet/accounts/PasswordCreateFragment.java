@@ -1,4 +1,4 @@
-package wallet.erc20.tazzmanian.erc20wallet;
+package wallet.erc20.tazzmanian.erc20wallet.accounts;
 
 import android.content.Context;
 import android.content.Intent;
@@ -25,6 +25,8 @@ import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.entity.StringEntity;
 import cz.msebera.android.httpclient.message.BasicHeader;
 import cz.msebera.android.httpclient.protocol.HTTP;
+import wallet.erc20.tazzmanian.erc20wallet.MainActivity;
+import wallet.erc20.tazzmanian.erc20wallet.R;
 import wallet.erc20.tazzmanian.erc20wallet.db.DBManager;
 
 

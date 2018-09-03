@@ -26,6 +26,8 @@ import java.util.Stack;
 import wallet.erc20.tazzmanian.erc20wallet.accounts.AccountPopFragment;
 import wallet.erc20.tazzmanian.erc20wallet.accounts.AccountsFragment;
 import wallet.erc20.tazzmanian.erc20wallet.accounts.ExportPopFragment;
+import wallet.erc20.tazzmanian.erc20wallet.accounts.ImportSeedsFragment;
+import wallet.erc20.tazzmanian.erc20wallet.accounts.PasswordCreateFragment;
 import wallet.erc20.tazzmanian.erc20wallet.addressbook.AddContactFragment;
 import wallet.erc20.tazzmanian.erc20wallet.addressbook.AddressBookFragment;
 import wallet.erc20.tazzmanian.erc20wallet.addressbook.ContactPopFragment;

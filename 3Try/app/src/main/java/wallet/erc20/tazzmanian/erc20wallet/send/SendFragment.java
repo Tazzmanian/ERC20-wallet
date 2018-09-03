@@ -4,11 +4,13 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.EditText;
 
 import java.util.ArrayList;
@@ -16,6 +18,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import wallet.erc20.tazzmanian.erc20wallet.R;
+import wallet.erc20.tazzmanian.erc20wallet.accounts.ImportAccountPassPopFragment;
 import wallet.erc20.tazzmanian.erc20wallet.addressbook.ContactItem;
 import wallet.erc20.tazzmanian.erc20wallet.contracts.ContractItems;
 import wallet.erc20.tazzmanian.erc20wallet.db.DBManager;
@@ -112,6 +115,26 @@ public class SendFragment extends Fragment {
         ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(getContext(), android.R.layout.select_dialog_item, contracts);
         contract.setAdapter(adapter2);
         contract.setThreshold(0);
+
+        EditText amount = (EditText) view.findViewById(R.id.amount_tx);
+
+        Button b = (Button) view.findViewById(R.id.button4);
+
+        b.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                /* Toast.makeText(getActivity(), s.hash, Toast.LENGTH_LONG).show(); */
+                FragmentManager fm = getFragmentManager();
+                final SendPopFragment pop = new SendPopFragment();
+                Bundle args = new Bundle();
+                args.putString("mnemonics", DBManager.am.getActiveMnemonicsAccount());
+                args.putString("to", to.getText().toString());
+                args.putString("contract", contract.getText().toString());
+                args.putString("amount", amount.getText().toString());
+                pop.setArguments(args);
+                pop.show(fm, "Dialog");
+            }
+        });
 
 
         return view;
