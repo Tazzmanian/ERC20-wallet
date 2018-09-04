@@ -8,6 +8,7 @@ package com.tazz.web3jWrapper.send;
 import com.tazz.web3jWrapper.accounts.CreateResponseDTO;
 import com.tazz.web3jWrapper.contracts.ERC20Wrapper;
 import java.io.File;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -45,13 +46,23 @@ public class SendService {
     }
 
     private TransactionReceipt sendEther(SendDTO dto) {
-        Credentials cred = WalletUtils.loadBip39Credentials(dto.getPassword(), dto.getMnemonics());
-        Web3j web3 = Web3j.build(new HttpService(dto.getNetwork()));
+        String pass = dto.getPassword();
+        String mne = dto.getMnemonics();
+        String net = dto.getNetwork();
+        String to = dto.getTo();
+        BigDecimal eth = dto.getEthers();
+        log.info(pass);
+        log.info(mne);
+        log.info(net);
+        log.info(to);
+        log.info(eth.toString());
+        Credentials cred = WalletUtils.loadBip39Credentials(pass, mne);
+        Web3j web3 = Web3j.build(new HttpService(net));
 
         try{
             return Transfer.sendFunds(
-            web3, cred, dto.getTo(),
-            dto.getEthers(), Convert.Unit.ETHER)
+            web3, cred, to,
+            eth, Convert.Unit.ETHER)
             .send();            
         } catch(Exception e) {
             log.info("Send funds " + e.getMessage());

@@ -35,6 +35,7 @@ import wallet.erc20.tazzmanian.erc20wallet.contracts.AddContractFragment;
 import wallet.erc20.tazzmanian.erc20wallet.contracts.ContractFragment;
 import wallet.erc20.tazzmanian.erc20wallet.contracts.ContractPopFragment;
 import wallet.erc20.tazzmanian.erc20wallet.send.SendFragment;
+import wallet.erc20.tazzmanian.erc20wallet.send.SendPopFragment;
 import wallet.erc20.tazzmanian.erc20wallet.servers.AddServerFragment;
 import wallet.erc20.tazzmanian.erc20wallet.servers.ServerFragment;
 import wallet.erc20.tazzmanian.erc20wallet.servers.ServerPopFragment;
@@ -49,7 +50,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         AddServerFragment.OnFragmentInteractionListener, ServerPopFragment.OnFragmentInteractionListener,
         AddContractFragment.OnFragmentInteractionListener, ExportPopFragment.OnFragmentInteractionListener,
         AddressBookFragment.OnFragmentInteractionListener, AddContactFragment.OnFragmentInteractionListener,
-        ContactPopFragment.OnFragmentInteractionListener, ContractPopFragment.OnFragmentInteractionListener
+        ContactPopFragment.OnFragmentInteractionListener, ContractPopFragment.OnFragmentInteractionListener,
+        SendPopFragment.OnFragmentInteractionListener
 {
 
     private TextView mTextMessage;
