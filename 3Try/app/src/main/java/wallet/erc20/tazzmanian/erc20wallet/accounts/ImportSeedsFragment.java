@@ -1,4 +1,4 @@
-package wallet.erc20.tazzmanian.erc20wallet;
+package wallet.erc20.tazzmanian.erc20wallet.accounts;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -14,7 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
-import wallet.erc20.tazzmanian.erc20wallet.accounts.ImportAccountPassPopFragment;
+import wallet.erc20.tazzmanian.erc20wallet.R;
 
 /**
  * A fragment with a Google +1 button.

@@ -4,7 +4,7 @@
     android:id="@+id/importFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ImportSeedsFragment">
+    tools:context=".accounts.ImportSeedsFragment">
 
     <ScrollView
         android:layout_width="match_parent"

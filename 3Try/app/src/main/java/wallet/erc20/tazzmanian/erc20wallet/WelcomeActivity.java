@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.view.View;
 
 import wallet.erc20.tazzmanian.erc20wallet.accounts.ImportAccountPassPopFragment;
+import wallet.erc20.tazzmanian.erc20wallet.accounts.ImportSeedsFragment;
+import wallet.erc20.tazzmanian.erc20wallet.accounts.PasswordCreateFragment;
 import wallet.erc20.tazzmanian.erc20wallet.db.DBManager;
 
 public class WelcomeActivity extends AppCompatActivity
