@@ -5,6 +5,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +14,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,8 +45,43 @@ public class SendFragment extends Fragment {
     private String mParam1;
     private String mParam2;
     private View view;
+    private EditText from;
+    private AutoCompleteTextView to;
+    private AutoCompleteTextView contract;
+    private EditText amount;
+    private Button b;
 
     private OnFragmentInteractionListener mListener;
+
+    //  create a textWatcher member
+    private TextWatcher mTextWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+            // check Fields For Empty Values
+            checkFieldsForEmptyValues();
+        }
+    };
+
+    void checkFieldsForEmptyValues(){
+        String f = from.getText().toString();
+        String t = to.getText().toString();
+        String c = contract.getText().toString();
+        String a = amount.getText().toString();
+
+        if(a.equals("") || f.equals("") || t.equals("")){
+            b.setEnabled(false);
+        } else {
+            b.setEnabled(true);
+        }
+    }
 
     public SendFragment() {
         // Required empty public constructor
@@ -82,10 +120,10 @@ public class SendFragment extends Fragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_send, container, false);
 
-        EditText from = (EditText) view.findViewById(R.id.from_tx);
+        from = (EditText) view.findViewById(R.id.from_tx);
         from.setText(DBManager.am.getActiveHashAccount());
 
-        AutoCompleteTextView to = (AutoCompleteTextView) view.findViewById(R.id.to_tx);
+        to = (AutoCompleteTextView) view.findViewById(R.id.to_tx);
         // Get the string array
         ArrayList<String> accounts = new ArrayList<>();
         ArrayList<ContactItem> accs = DBManager.abm.getAll();
@@ -101,7 +139,7 @@ public class SendFragment extends Fragment {
         to.setThreshold(0);
 
         /////////
-        AutoCompleteTextView contract = (AutoCompleteTextView) view.findViewById(R.id.contract_tx);
+        contract = (AutoCompleteTextView) view.findViewById(R.id.contract_tx);
         // Get the string array
         ArrayList<String> contracts = new ArrayList<>();
         ArrayList<ContractItems> cons = DBManager.cm.getAll();
@@ -116,9 +154,10 @@ public class SendFragment extends Fragment {
         contract.setAdapter(adapter2);
         contract.setThreshold(0);
 
-        EditText amount = (EditText) view.findViewById(R.id.amount_tx);
+        amount = (EditText) view.findViewById(R.id.amount_tx);
+        amount.addTextChangedListener(mTextWatcher);
 
-        Button b = (Button) view.findViewById(R.id.button4);
+        b = (Button) view.findViewById(R.id.send_btn);
 
         b.setOnClickListener(new View.OnClickListener() {
             @Override
