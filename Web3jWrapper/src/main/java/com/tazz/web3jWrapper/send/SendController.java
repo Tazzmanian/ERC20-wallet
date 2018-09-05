@@ -28,4 +28,9 @@ public class SendController {
     public TransactionReceipt send(@RequestBody SendDTO dto) {
         return sendService.send(dto);
     }
+    
+    @PostMapping(value = "/balance")
+    public BalanceResponceDTO balance(@RequestBody BalanceDTO dto) {
+        return sendService.balance(dto);
+    }
 }

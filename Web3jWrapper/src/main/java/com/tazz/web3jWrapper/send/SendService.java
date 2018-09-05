@@ -8,6 +8,7 @@ package com.tazz.web3jWrapper.send;
 import com.tazz.web3jWrapper.accounts.CreateResponseDTO;
 import com.tazz.web3jWrapper.contracts.ERC20Wrapper;
 import java.io.File;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.logging.Level;
@@ -18,6 +19,7 @@ import org.web3j.crypto.Bip39Wallet;
 import org.web3j.crypto.Credentials;
 import org.web3j.crypto.WalletUtils;
 import org.web3j.protocol.Web3j;
+import org.web3j.protocol.core.DefaultBlockParameter;
 import org.web3j.protocol.core.methods.request.Transaction;
 import org.web3j.protocol.core.methods.response.EthGetTransactionCount;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
@@ -81,6 +83,25 @@ public class SendService {
             return contract.transfer(dto.getTo(), dto.getTokens()).send();
         } catch (Exception ex) {
             log.info("Send tokens ", ex.getMessage());
+        }
+        
+        return null;
+    }
+
+    public BalanceResponceDTO balance(BalanceDTO dto) {
+        try {
+            Web3j web3 = Web3j.build(new HttpService(dto.getNetwork()));
+            BalanceResponceDTO res = new BalanceResponceDTO();
+            BigInteger eth = web3.ethGetBalance(dto.getAddress(), DefaultBlockParameter.valueOf(web3.ethBlockNumber().send().getBlockNumber())).send().getBalance();
+            res.setEther(Convert.fromWei(eth.toString(), Convert.Unit.ETHER).toString());
+            if(!dto.getContract().isEmpty()) {
+                ClientTransactionManager clientManager = new ClientTransactionManager(web3, dto.getAddress());
+                ERC20Wrapper contract = ERC20Wrapper.load(dto.getContract(), web3, clientManager, DefaultGasProvider.GAS_PRICE, DefaultGasProvider.GAS_LIMIT);
+                res.setToken(contract.balanceOf(dto.getAddress()).send().toString());
+            }
+            return res;
+        } catch (Exception ex) {
+            log.info("balance of ", ex.getMessage());
         }
         
         return null;
