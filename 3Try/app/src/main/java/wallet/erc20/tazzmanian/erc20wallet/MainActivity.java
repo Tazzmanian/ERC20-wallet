@@ -179,22 +179,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         switch (item.getItemId()) {
             case R.id.nav_accounts:
                 loadFragment(new AccountsFragment());
-                loadBottomNavigation(R.id.nav_accounts, R.menu.account_manage_menu);
+                loadBottomNavigation(R.id.nav_accounts, R.menu.navigation);
                 flag = true;
                 break;
             case R.id.nav_contracts:
                 loadFragment(new ContractFragment());
-                loadBottomNavigation(R.id.nav_contracts, R.menu.contracts_manage_menu);
+                loadBottomNavigation(R.id.nav_contracts, R.menu.navigation);
                 flag = true;
                 break;
             case R.id.nav_server:
                 loadFragment(new ServerFragment());
-                loadBottomNavigation(R.id.nav_server, R.menu.server_manage_menu);
+                loadBottomNavigation(R.id.nav_server, R.menu.navigation);
                 flag = true;
                 break;
             case R.id.nav_address_book:
                 loadFragment(new AddressBookFragment());
-                loadBottomNavigation(R.id.nav_server, R.menu.address_book_manage_menu);
+                loadBottomNavigation(R.id.nav_server, R.menu.navigation);
                 flag = true;
                 break;
         }
@@ -245,7 +245,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_accounts:
             case R.id.nav_contracts:
             case R.id.nav_server:
-                hidden = true;
+//                hidden = true;
                 loadMenu(menuId, hidden);
                 break;
         }
@@ -291,11 +291,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
             navigationView.setOnNavigationItemSelectedListener(null);
             navigationView.setSelectedItemId(f.selectedId);
-            if(f.hidden) {
-                navigationView.setVisibility(View.GONE);
-            } else {
-                navigationView.setVisibility(View.VISIBLE);
-            }
+//            if(f.hidden) {
+//                navigationView.setVisibility(View.GONE);
+//            } else {
+//                navigationView.setVisibility(View.VISIBLE);
+//            }
             navigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         }
 
