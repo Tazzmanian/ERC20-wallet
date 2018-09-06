@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,12 +15,24 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.JsonHttpResponseHandler;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import cz.msebera.android.httpclient.Header;
+import cz.msebera.android.httpclient.entity.StringEntity;
+import cz.msebera.android.httpclient.message.BasicHeader;
+import cz.msebera.android.httpclient.protocol.HTTP;
 import wallet.erc20.tazzmanian.erc20wallet.R;
 import wallet.erc20.tazzmanian.erc20wallet.accounts.ImportAccountPassPopFragment;
 import wallet.erc20.tazzmanian.erc20wallet.addressbook.ContactItem;
@@ -153,11 +166,92 @@ public class SendFragment extends Fragment {
         ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(getContext(), android.R.layout.select_dialog_item, contracts);
         contract.setAdapter(adapter2);
         contract.setThreshold(0);
+        contract.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    AsyncHttpClient client = new AsyncHttpClient();
+                    JSONObject jsonParams = new JSONObject();
+                    StringEntity entity = null;
+                    try {
+                        jsonParams.put("address", DBManager.am.getActiveHashAccount());
+                        jsonParams.put("contract", contract.getText().toString());
+                        jsonParams.put("network", DBManager.sm.getActive().toString());
+                        entity = new StringEntity(jsonParams.toString());
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    entity.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
+
+                    client.post(getActivity(), "http://10.0.2.2:5000/balance", entity, "application/json", new JsonHttpResponseHandler() {
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                            Log.d("create", "account succeded");
+                            if(response == null) {
+                                Log.e("balance", "sending failed");
+                            } else {
+                                try {
+                                    TextView ether = (TextView) view.findViewById(R.id.tokenBalance);
+                                    ether.setText(response.getString("token"));
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                            Log.e("balance", "sending failed");
+                        }
+                    });
+                }
+            }
+        });
+
 
         amount = (EditText) view.findViewById(R.id.amount_tx);
         amount.addTextChangedListener(mTextWatcher);
 
         b = (Button) view.findViewById(R.id.send_btn);
+
+        AsyncHttpClient client = new AsyncHttpClient();
+        JSONObject jsonParams = new JSONObject();
+        StringEntity entity = null;
+        try {
+            jsonParams.put("address", DBManager.am.getActiveHashAccount());
+            jsonParams.put("contract", "");
+            jsonParams.put("network", DBManager.sm.getActive().toString());
+            entity = new StringEntity(jsonParams.toString());
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        entity.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
+
+        client.post(getActivity(), "http://10.0.2.2:5000/balance", entity, "application/json", new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Log.d("create", "account succeded");
+                if(response == null) {
+                    Log.e("balance", "sending failed");
+                } else {
+                    try {
+                        TextView ether = (TextView) view.findViewById(R.id.etherBalance);
+                        ether.setText(response.getString("ether"));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                Log.e("balance", "sending failed");
+            }
+        });
 
         b.setOnClickListener(new View.OnClickListener() {
             @Override
