@@ -15,4 +15,9 @@ import lombok.Data;
 public class BalanceResponceDTO {
     private String ether;
     private String token;
+    
+    public BalanceResponceDTO() {
+        ether = "N/A";
+        token = "N/A";
+    }
 }

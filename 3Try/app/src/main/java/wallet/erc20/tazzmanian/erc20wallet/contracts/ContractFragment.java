@@ -2,6 +2,7 @@ package wallet.erc20.tazzmanian.erc20wallet.contracts;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -9,15 +10,30 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.JsonHttpResponseHandler;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 
+import cz.msebera.android.httpclient.Header;
+import cz.msebera.android.httpclient.entity.StringEntity;
+import cz.msebera.android.httpclient.message.BasicHeader;
+import cz.msebera.android.httpclient.protocol.HTTP;
+import wallet.erc20.tazzmanian.erc20wallet.MainActivity;
 import wallet.erc20.tazzmanian.erc20wallet.R;
 import wallet.erc20.tazzmanian.erc20wallet.accounts.AccountItems;
 import wallet.erc20.tazzmanian.erc20wallet.accounts.AccountPopFragment;
@@ -174,6 +190,43 @@ public class ContractFragment extends Fragment {
 
             final ContractItems s = list.get(position);
 
+            AsyncHttpClient client = new AsyncHttpClient();
+            JSONObject jsonParams = new JSONObject();
+            StringEntity entity = null;
+            try {
+                jsonParams.put("address", DBManager.am.getActiveHashAccount());
+                jsonParams.put("contract", s.addressHash);
+                jsonParams.put("network", DBManager.sm.getActive().toString());
+                entity = new StringEntity(jsonParams.toString());
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            entity.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
+
+            client.post(getActivity(), "http://10.0.2.2:5000/balance", entity, "application/json", new JsonHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    Log.d("create", "account succeded");
+                    if(response == null) {
+                        Log.e("balance", "sending failed");
+                    } else {
+                        TextView amount = view.findViewById(R.id.amount);
+                        try {
+                            amount.setText(response.getString("token") + " " + s.symbol);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                    Log.e("balance", "sending failed");
+                }
+            });
+
             TextView name = view.findViewById(R.id.name);
             name.setText(s.name);
 
@@ -182,6 +235,9 @@ public class ContractFragment extends Fragment {
 
             TextView hash = view.findViewById(R.id.hash);
             hash.setText(s.addressHash);
+
+//            TextView amount = view.findViewById(R.id.amount);
+//            amount.setText("10 " + s.symbol);
 
             view.setOnClickListener(new View.OnClickListener() {
                 @Override

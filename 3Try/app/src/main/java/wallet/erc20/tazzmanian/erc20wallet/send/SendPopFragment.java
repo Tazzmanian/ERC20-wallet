@@ -130,7 +130,7 @@ public class SendPopFragment extends DialogFragment {
                         } else {
                             try {
                                 if(response.getBoolean("statusOK")){
-                                    Toast.makeText(view.getContext(), "Transaction compreted!", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(view.getContext(), "Transaction completed!", Toast.LENGTH_SHORT).show();
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();

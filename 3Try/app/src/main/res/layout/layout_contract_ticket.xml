@@ -48,4 +48,13 @@
         android:padding="6dp"
         android:text="TextView"
         android:textColor="@android:color/black" />
+
+    <TextView
+        android:id="@+id/amount"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="right|center"
+        android:padding="6dp"
+        android:textColor="@android:color/black" />
+
 </LinearLayout>

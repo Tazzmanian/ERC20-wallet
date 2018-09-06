@@ -21,6 +21,8 @@ import org.web3j.crypto.WalletUtils;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameter;
 import org.web3j.protocol.core.methods.request.Transaction;
+import org.web3j.protocol.core.methods.response.EthBlockNumber;
+import org.web3j.protocol.core.methods.response.EthGetBalance;
 import org.web3j.protocol.core.methods.response.EthGetTransactionCount;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.protocol.http.HttpService;
@@ -89,21 +91,22 @@ public class SendService {
     }
 
     public BalanceResponceDTO balance(BalanceDTO dto) {
+        BalanceResponceDTO res = new BalanceResponceDTO();
         try {
             Web3j web3 = Web3j.build(new HttpService(dto.getNetwork()));
-            BalanceResponceDTO res = new BalanceResponceDTO();
-            BigInteger eth = web3.ethGetBalance(dto.getAddress(), DefaultBlockParameter.valueOf(web3.ethBlockNumber().send().getBlockNumber())).send().getBalance();
+            EthBlockNumber blockNumber = web3.ethBlockNumber().send();
+            EthGetBalance balance = web3.ethGetBalance(dto.getAddress(), DefaultBlockParameter.valueOf(blockNumber.getBlockNumber())).send();
+            BigInteger eth = balance.getBalance();
             res.setEther(Convert.fromWei(eth.toString(), Convert.Unit.ETHER).toString());
             if(!dto.getContract().isEmpty()) {
                 ClientTransactionManager clientManager = new ClientTransactionManager(web3, dto.getAddress());
                 ERC20Wrapper contract = ERC20Wrapper.load(dto.getContract(), web3, clientManager, DefaultGasProvider.GAS_PRICE, DefaultGasProvider.GAS_LIMIT);
                 res.setToken(contract.balanceOf(dto.getAddress()).send().toString());
             }
-            return res;
         } catch (Exception ex) {
             log.info("balance of ", ex.getMessage());
         }
         
-        return null;
+        return res;
     }
 }
