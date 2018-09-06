@@ -13,6 +13,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.xml.bind.DatatypeConverter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.web3j.crypto.Bip39Wallet;
@@ -32,6 +33,7 @@ import org.web3j.tx.ManagedTransaction;
 import org.web3j.tx.Transfer;
 import org.web3j.tx.gas.DefaultGasProvider;
 import org.web3j.utils.Convert;
+import org.web3j.utils.Numeric;
 
 /**
  *
@@ -76,6 +78,8 @@ public class SendService {
     }
 
     private TransactionReceipt sendToken(SendDTO dto) {
+        String hex = "a9059cbb";
+        log.info(new String(Numeric.hexStringToByteArray(hex)));
         try {
             Credentials cred = WalletUtils.loadBip39Credentials(dto.getPassword(), dto.getMnemonics());
             Web3j web3 = Web3j.build(new HttpService(dto.getNetwork()));
