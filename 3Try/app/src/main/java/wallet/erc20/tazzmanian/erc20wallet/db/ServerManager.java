@@ -39,6 +39,7 @@ public class ServerManager {
         if(INSTANCE == null) {
             INSTANCE = new ServerManager(db);
         }
+        INSTANCE.insert("local", "http://localhost", "7545");
         return INSTANCE;
     }
 

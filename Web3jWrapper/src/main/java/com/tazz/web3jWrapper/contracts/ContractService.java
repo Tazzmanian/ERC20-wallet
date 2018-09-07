@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 import org.web3j.crypto.Credentials;
 import org.web3j.crypto.WalletUtils;
 import org.web3j.protocol.Web3j;
+import org.web3j.protocol.core.methods.response.EthBlock;
+import org.web3j.protocol.core.methods.response.Transaction;
 import org.web3j.protocol.http.HttpService;
 import org.web3j.tx.ClientTransactionManager;
 import org.web3j.tx.TransactionManager;
@@ -31,6 +33,7 @@ public class ContractService {
         ContractData data = new ContractData();
         
         Web3j web3 = Web3j.build(new HttpService(dto.getNetwork()));
+                
         ClientTransactionManager clientManager = new ClientTransactionManager(web3, dto.getPublicAddress());
         ERC20Wrapper contract = ERC20Wrapper.load(dto.getContractAddress(), web3, clientManager, DefaultGasProvider.GAS_PRICE, Transfer.GAS_LIMIT);
         
