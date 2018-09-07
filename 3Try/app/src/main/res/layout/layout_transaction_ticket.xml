@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/transaction_ticket_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="6dp"
+    android:layout_marginBottom="3dp"
+    android:layout_marginTop="3dp"
+    android:background="@color/gray"
+    android:orientation="vertical"
+    android:padding="0dp"
+    android:paddingBottom="6dp"
+    android:paddingTop="6dp">
+
+    <TextView
+        android:id="@+id/textView16"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="From" />
+
+    <TextView
+        android:id="@+id/from"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:padding="6dp"
+        android:text="from"
+        android:textColor="@android:color/black" />
+
+    <TextView
+        android:id="@+id/textView18"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="To" />
+
+    <TextView
+        android:id="@+id/to"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:padding="6dp"
+        android:text="to"
+        android:textColor="@android:color/black" />
+
+    <TextView
+        android:id="@+id/textView19"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Contract Hash" />
+
+    <TextView
+        android:id="@+id/contract"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:padding="6dp"
+        android:text="contract"
+        android:textColor="@android:color/black" />
+
+    <TextView
+        android:id="@+id/textView20"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Transaction Hash" />
+
+    <TextView
+        android:id="@+id/hash"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:padding="6dp"
+        android:text="hash"
+        android:textColor="@android:color/black" />
+
+    <TextView
+        android:id="@+id/textView21"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Amount" />
+
+    <TextView
+        android:id="@+id/amount"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="right|center"
+        android:padding="6dp"
+        android:text="amount"
+        android:textColor="@android:color/black" />
+
+</LinearLayout>

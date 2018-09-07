@@ -19,7 +19,7 @@ public class HistoryResponseDTO {
     private String contract;
     private String amount;
     private String txHash;
-    private String curruncy;
+    private String currency;
     private String nonce;
     private String blockNumber;
 }

@@ -10,6 +10,7 @@ import com.tazz.web3jWrapper.contracts.ERC20Wrapper;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +33,7 @@ import org.web3j.protocol.http.HttpService;
 import org.web3j.tx.ClientTransactionManager;
 import org.web3j.tx.Transfer;
 import org.web3j.tx.gas.DefaultGasProvider;
+import org.web3j.utils.Convert;
 import rx.Completable;
 import rx.Observable;
 import rx.Subscription;
@@ -76,12 +78,11 @@ public class HistoryService {
                         r.setTo(tx.getTo());
                         r.setNonce(tx.getNonce().toString());
                         r.setNetwork(dto.getNetwork());
-                        r.setAmount(tx.getValue().toString());
+                        r.setAmount(Convert.fromWei(tx.getValue().toString(), Convert.Unit.ETHER).toPlainString());
                         r.setContract(tx.getTo());
                         r.setTxHash(tx.getHash());
                         r.setContract("");
-                        r.setCurruncy("ETH");
-                        res.add(r);
+                        r.setCurrency("ETH");
                         log.info("===============================");
                         log.info("from " + tx.getFrom());
                         log.info("hash " + tx.getHash());
@@ -95,6 +96,10 @@ public class HistoryService {
                         } else if ((!dto.getAddress().equals(r.getFrom()) || dto.getAddress().equals(r.getTo()))
                                 && (dto.getAddress().equals(r.getFrom()) || !dto.getAddress().equals(r.getTo()))) {
                             transfert(tx.getInput(), r, web3);
+                        }
+
+                        if (dto.getAddress().equals(r.getFrom()) || dto.getAddress().equals(r.getTo())) {
+                            res.add(r);
                         }
                     }
                     log.info("Number of active threads from the given thread 3: " + Thread.activeCount());
@@ -137,7 +142,7 @@ public class HistoryService {
             ClientTransactionManager clientManager = new ClientTransactionManager(web3, res.getTo());
             ERC20Wrapper contract = ERC20Wrapper.load(res.getContract(), web3, clientManager, DefaultGasProvider.GAS_PRICE, Transfer.GAS_LIMIT);
 
-            res.setCurruncy(contract.symbol().send());
+            res.setCurrency(contract.symbol().send());
         } catch (NoSuchMethodException ex) {
             Logger.getLogger(HistoryService.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SecurityException ex) {
@@ -166,12 +171,12 @@ public class HistoryService {
             Uint256 amount = (Uint256) refMethod.invoke(null, logs.get(0).getData(), 0, Uint256.class);
             System.out.println(amount.getValue());
             dto.setAmount(amount.getValue().toString());
-            
+
             ClientTransactionManager clientManager = new ClientTransactionManager(web3, dto.getFrom());
             ERC20Wrapper contract = ERC20Wrapper.load(dto.getContract(), web3, clientManager, DefaultGasProvider.GAS_PRICE, Transfer.GAS_LIMIT);
 
-            dto.setCurruncy(contract.symbol().send());
-            
+            dto.setCurrency(contract.symbol().send());
+
             logs.forEach(l -> {
                 log.info("++++++");
                 log.info(l.getAddress());

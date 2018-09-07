@@ -101,7 +101,7 @@ public class SendService {
             EthBlockNumber blockNumber = web3.ethBlockNumber().send();
             EthGetBalance balance = web3.ethGetBalance(dto.getAddress(), DefaultBlockParameter.valueOf(blockNumber.getBlockNumber())).send();
             BigInteger eth = balance.getBalance();
-            res.setEther(Convert.fromWei(eth.toString(), Convert.Unit.ETHER).toString());
+            res.setEther(Convert.fromWei(eth.toString(), Convert.Unit.ETHER).toPlainString());
             if(!dto.getContract().isEmpty()) {
                 ClientTransactionManager clientManager = new ClientTransactionManager(web3, dto.getAddress());
                 ERC20Wrapper contract = ERC20Wrapper.load(dto.getContract(), web3, clientManager, DefaultGasProvider.GAS_PRICE, DefaultGasProvider.GAS_LIMIT);
