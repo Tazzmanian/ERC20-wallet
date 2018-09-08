@@ -31,9 +31,9 @@ public class AccountService {
             Bip39Wallet wallet = WalletUtils.generateBip39Wallet(password, new File(dir));
 //            String[] words = mnemonics.split(" ");
 //            ArrayList<String> arr = new ArrayList(Arrays.stream(words).collect(Collectors.toList()));
-            dto.setMnemonics(wallet.getMnemonic());
             File file = new File(dir + File.separator + wallet.getFilename());
             Credentials cred = WalletUtils.loadCredentials(password, file);
+            dto.setMnemonics(wallet.getMnemonic());
             dto.setHash(cred.getAddress());
             file.delete();
         } catch (Exception e) {

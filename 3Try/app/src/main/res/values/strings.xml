@@ -19,5 +19,6 @@
     <string name="title_select">Select</string>
     <string name="title_public_address">Public Address</string>
     <string name="edit_server_title">Edit Server</string>
+    <string name="edit_contact_title">Edit Contact</string>
     <string name="update_btn">update</string>
 </resources>
