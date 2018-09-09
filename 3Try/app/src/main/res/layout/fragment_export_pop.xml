@@ -39,10 +39,10 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView
-                android:id="@+id/textView8"
+                android:id="@+id/mnemonics"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="mercy version wild harbor bottom agree drama unhappy dose left misery horse"
+                android:text=""
                 android:textSize="24sp" />
 
         </LinearLayout>

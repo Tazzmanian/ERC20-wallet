@@ -8,8 +8,10 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import wallet.erc20.tazzmanian.erc20wallet.R;
+import wallet.erc20.tazzmanian.erc20wallet.db.DBManager;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -66,7 +68,10 @@ public class ExportPopFragment extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_export_pop, container, false);
+        View view = inflater.inflate(R.layout.fragment_export_pop, container, false);
+        TextView mnemonics = view.findViewById(R.id.mnemonics);
+        mnemonics.setText(DBManager.am.getActiveMnemonicsAccount());
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
