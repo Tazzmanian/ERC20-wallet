@@ -156,6 +156,10 @@ public class PasswordCreateFragment extends Fragment {
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
+                        Intent intent = new Intent(getActivity(), MainActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                        getActivity().finish();
                     }
 
                     @Override
@@ -163,11 +167,6 @@ public class PasswordCreateFragment extends Fragment {
                         Log.e("create", "account failed");
                     }
                 });
-
-                Intent intent = new Intent(getActivity(), MainActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
-                getActivity().finish();
             }
         });
 
