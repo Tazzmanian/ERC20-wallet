@@ -127,7 +127,7 @@ public class ServerManager {
         db.update(TableName, values, ColumnID + " = ?", new String[] {id.toString()});
     }
 
-    public void deleteAccount(Long id) {
+    public void delete(Long id) {
         db.delete(TableName,ColumnID + " = ?", new String[] {id.toString()});
     }
 

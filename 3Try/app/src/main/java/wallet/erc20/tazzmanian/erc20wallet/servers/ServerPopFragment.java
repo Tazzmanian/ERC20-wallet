@@ -62,7 +62,7 @@ public class ServerPopFragment extends DialogFragment {
             @Override
             public void onClick(View v) {
                 dismiss();
-                DBManager.sm.deleteAccount(id);
+                DBManager.sm.delete(id);
             }
         });
 
