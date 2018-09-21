@@ -10,8 +10,6 @@ import com.tazz.web3jWrapper.contracts.ERC20Wrapper;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -23,9 +21,6 @@ import org.web3j.abi.datatypes.Address;
 import org.web3j.abi.datatypes.generated.Uint256;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameter;
-import org.web3j.protocol.core.DefaultBlockParameterName;
-import org.web3j.protocol.core.Request;
-import org.web3j.protocol.core.methods.response.EthBlock;
 import org.web3j.protocol.core.methods.response.EthGetTransactionReceipt;
 import org.web3j.protocol.core.methods.response.Log;
 import org.web3j.protocol.core.methods.response.Transaction;
@@ -34,12 +29,9 @@ import org.web3j.tx.ClientTransactionManager;
 import org.web3j.tx.Transfer;
 import org.web3j.tx.gas.DefaultGasProvider;
 import org.web3j.utils.Convert;
-import rx.Completable;
 import rx.Observable;
 import rx.Subscription;
 import rx.functions.Action1;
-import rx.observables.BlockingObservable;
-import rx.subjects.PublishSubject;
 
 /**
  *
@@ -70,8 +62,8 @@ public class HistoryService {
             ob.toBlocking().forEach(new Action1<Transaction>() {
                 @Override
                 public void call(Transaction tx) {
-                    log.info("Number of active threads from the given thread 2: " + Thread.activeCount());
-                    if (tx.getNonce().compareTo(dto.getNonce()) > 0) {
+//                    log.info("Number of active threads from the given thread 2: " + Thread.activeCount());
+//                    if (tx.getNonce().compareTo(dto.getNonce()) > 0) {
                         HistoryResponseDTO r = new HistoryResponseDTO();
                         r.setBlockNumber(tx.getBlockNumber().toString());
                         r.setFrom(tx.getFrom());
@@ -96,12 +88,14 @@ public class HistoryService {
                         } else if ((!dto.getAddress().equals(r.getFrom()) || dto.getAddress().equals(r.getTo()))
                                 && (dto.getAddress().equals(r.getFrom()) || !dto.getAddress().equals(r.getTo()))) {
                             transfert(tx.getInput(), r, web3);
+                        } else if((dto.getAddress().equals(r.getFrom()) && !tx.getInput().isEmpty())) {
+                            transfert(tx.getInput(), r, web3);
                         }
 
                         if (dto.getAddress().equals(r.getFrom()) || dto.getAddress().equals(r.getTo())) {
                             res.add(r);
                         }
-                    }
+//                    }
                     log.info("Number of active threads from the given thread 3: " + Thread.activeCount());
                 }
             });
@@ -159,7 +153,7 @@ public class HistoryService {
 //            refMethod.close();
         }
     }
-
+    
     private void createdContract(HistoryResponseDTO dto, Web3j web3) {
         Method refMethod = null;
         try {

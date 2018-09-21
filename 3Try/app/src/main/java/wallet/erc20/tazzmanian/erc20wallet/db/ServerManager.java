@@ -39,10 +39,6 @@ public class ServerManager {
         if(INSTANCE == null) {
             INSTANCE = new ServerManager(db);
         }
-        
-        if(INSTANCE.getActive() == null) {
-            INSTANCE.insert("local", "http://localhost", "7545");
-        }
 
         return INSTANCE;
     }
@@ -195,5 +191,9 @@ public class ServerManager {
         }
 
         return null;
+    }
+
+    public void insertDefault() {
+        insert("local", "http://localhost", "7545");
     }
 }

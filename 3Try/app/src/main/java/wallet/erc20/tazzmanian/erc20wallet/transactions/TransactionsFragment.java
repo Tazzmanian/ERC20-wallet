@@ -36,6 +36,7 @@ import wallet.erc20.tazzmanian.erc20wallet.contracts.ContractFragment;
 import wallet.erc20.tazzmanian.erc20wallet.contracts.ContractItems;
 import wallet.erc20.tazzmanian.erc20wallet.contracts.ContractPopFragment;
 import wallet.erc20.tazzmanian.erc20wallet.db.DBManager;
+import wallet.erc20.tazzmanian.erc20wallet.servers.ServerItems;
 
 
 /**
@@ -101,6 +102,10 @@ public class TransactionsFragment extends Fragment {
         JSONObject jsonParams = new JSONObject();
         StringEntity entity = null;
         try {
+            ServerItems si = DBManager.sm.getActive();
+            if(si == null) {
+                DBManager.sm.insertDefault();
+            }
             TransactionItem ti = DBManager.tm.getLatest(DBManager.sm.getActive().toString(), DBManager.am.getActiveHashAccount());
             jsonParams.put("address", DBManager.am.getActiveHashAccount());
             jsonParams.put("blockNumber", ti.getBlockNumber());
